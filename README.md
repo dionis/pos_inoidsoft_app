@@ -1,16 +1,14 @@
 # pos_inoidsoft_app
 
-A new Flutter project.
+A flexible Point of Sale (POS) app using Flutter. Using QR lector and 
+OCR read image files.
 
-## Getting Started
+##App Features:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    - Written completely in Flutter
+    - MVVM code structure, with decoupled modules for easy drag-and-drop. functionality
+    - Singleton design pattern for optimized data handling, reducing memory usage by avoiding multiple service instances
+    - Riverpood, variables evaluations
+    - QR lector behaviour
+    - SQlite data storage
+    - OCR image lector
