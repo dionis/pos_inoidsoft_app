@@ -3,7 +3,7 @@
 A flexible Point of Sale (POS) app using Flutter. Using QR lector and 
 OCR read image files.
 
-##App Features:
+## App Features:
 
     - Written completely in Flutter
     - MVVM code structure, with decoupled modules for easy drag-and-drop. functionality
