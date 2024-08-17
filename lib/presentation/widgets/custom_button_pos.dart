@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButtonPoS extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPress;
 
-  const CustomButton({
+  const CustomButtonPoS({
     super.key,
     required this.icon,
     this.onPress,
@@ -16,6 +16,7 @@ class CustomButton extends StatelessWidget {
     // https://api.flutter.dev/flutter/material/FloatingActionButton-class.html
 
     return FloatingActionButton(
+      heroTag: 'Qr_Scaner',
       enableFeedback: true,
       backgroundColor: Colors.blueAccent,
       elevation: 20,

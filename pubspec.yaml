@@ -78,6 +78,14 @@ flutter:
   assets:
     - assets/
     - google_fonts/
+    - images/
+    - images/all/
+    - images/shoes/
+    - images/beauty/
+    - images/women fashion/
+    - images/men fashion/
+    - images/jewelry/ 
+    - images/pos_calculator/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

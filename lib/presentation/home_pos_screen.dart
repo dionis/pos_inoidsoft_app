@@ -4,6 +4,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 
+import '../domain/qr_code_reader_windows.dart';
 import '../models/cart_item.dart';
 
 class HomePosScreen extends StatefulWidget {
@@ -17,6 +18,29 @@ class _HomePosScreenState extends State<HomePosScreen> {
   String userInput = "0";
   String resultOutput = "0";
 
+  // List<String> buttonList = [
+  //   "AC",
+  //   "(",
+  //   ")",
+  //   "/",
+  //   "7",
+  //   "8",
+  //   "9",
+  //   "+",
+  //   "4",
+  //   "5",
+  //   "6",
+  //   "*",
+  //   "1",
+  //   "2",
+  //   "3",
+  //   "-",
+  //   "C",
+  //   "0",
+  //   ".",
+  //   "="
+  // ];
+
   List<String> buttonList = [
     "AC",
     "(",
@@ -27,76 +51,92 @@ class _HomePosScreenState extends State<HomePosScreen> {
     "9",
     "+",
     "4",
-    "5",
-    "6",
-    "*",
-    "1",
-    "2",
-    "3",
-    "-",
-    "C",
-    "0",
-    ".",
-    "="
   ];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(),
+            //appBar: AppBar(),
             body: Column(children: [
-              Container(
-                height: MediaQuery.of(context).size.height / 2.90,
-                child: resultWidget(),
-              ),
-              Expanded(child: buttomWidget())
-            ])));
+      Container(
+        height: MediaQuery.of(context).size.height / 2.90,
+        child: resultWidget(),
+      ),
+      // const SizedBox(
+      //   width: 5,
+      // ),
+      Expanded(child: buttomWidget())
+    ])));
   }
 
   Widget resultWidget() {
+    calculateItems();
+
     return Container(
       color: Colors.amber.shade50,
-      child: ListView.separated(
-        padding: const EdgeInsets.all(20),
-        itemBuilder: (context, index) => CarTile(
-          item: cartItems[index],
-          onRemove: () {
-            setState(() {
-              if (cartItems[index] != 1) {
-                cartItems[index].quantity--;
-              }
-            });
-          },
-          onAdd: () {
-            setState(() {
-              cartItems[index].quantity++;
-            });
-          },
-        ),
-        separatorBuilder: (context, index) => const SizedBox(height: 20),
-        itemCount: cartItems.length,
+      child: Column(
+        children: [
+          ListView.separated(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(20),
+            itemBuilder: (context, index) => CarTile(
+              item: cartItems[index],
+              onRemove: () {
+                setState(() {
+                  if (cartItems[index] != 1) {
+                    cartItems[index].quantity--;
+                  }
+                });
+              },
+              onAdd: () {
+                setState(() {
+                  cartItems[index].quantity++;
+                });
+              },
+            ),
+            separatorBuilder: (context, index) => const SizedBox(height: 5),
+            itemCount: cartItems.length,
+          ),
+          const SizedBox(height: 5),
+          Expanded(
+              child: Text(
+            resultOutput,
+            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.end,
+            textDirection: TextDirection.rtl,
+          )),
+          //Container(
+          //   padding: const EdgeInsets.all(20),
+          //   alignment: Alignment.bottomRight,
+          //   child: Text(resultOutput,
+          //       style:
+          //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+          // )
+        ],
       ),
-      // Column(
+
+      //  Column(
       //   mainAxisAlignment: MainAxisAlignment.end,
       //   children: [
       //     //Search input for filter buyer in a car
       //     //ListView with all Product with filter
-      //     Container(
-      //       padding: const EdgeInsets.all(20),
-      //       alignment: Alignment.bottomRight,
-      //       child: Text(userInput,
-      //           style:
-      //               const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-      //     ),
-      //     const SizedBox(),
-      //     Container(
-      //       padding: const EdgeInsets.all(20),
-      //       alignment: Alignment.bottomRight,
-      //       child: Text(resultOutput,
-      //           style:
-      //               const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-      //     )
+      //     // Container(
+      //     //   padding: const EdgeInsets.all(20),
+      //     //   alignment: Alignment.bottomRight,
+      //     //   child: Text(userInput,
+      //     //       style:
+      //     //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+      //     // ),
+
+      //     //const SizedBox(height: 5),
+      //     // Container(
+      //     //   padding: const EdgeInsets.all(20),
+      //     //   alignment: Alignment.bottomRight,
+      //     //   child: Text(resultOutput,
+      //     //       style:
+      //     //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+      //     // )
       //   ],
       // ),
     );
@@ -108,7 +148,7 @@ class _HomePosScreenState extends State<HomePosScreen> {
       color: const Color.fromARGB(66, 233, 232, 232),
       child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
+            crossAxisCount: 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
@@ -121,13 +161,14 @@ class _HomePosScreenState extends State<HomePosScreen> {
 
   getColor(String text) {
     switch (text) {
+      case "(":
+        return const Color.fromARGB(255, 255, 68, 158);
       case "/":
       case "*":
       case "+":
       case "-":
       case "C":
       case ")":
-      case "(":
         return Colors.redAccent;
       case "=":
       case "AC":
@@ -166,6 +207,7 @@ class _HomePosScreenState extends State<HomePosScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: getColor(text),
+                image: getImageButtonDecoration(text),
                 boxShadow: [
                   BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
@@ -205,6 +247,20 @@ class _HomePosScreenState extends State<HomePosScreen> {
       }
 
       return;
+    } else if (text == '(') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          //QR Reader see mor examples in:
+          //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
+
+          //and about the library
+          // https://pub.dev/packages/mobile_scanner/
+
+          builder: (context) => const QrReaderCodeWindow(),
+        ),
+      );
+
+      return;
     }
 
     userInput = userInput + text;
@@ -217,6 +273,50 @@ class _HomePosScreenState extends State<HomePosScreen> {
       return evaluation.toString();
     } catch (e) {
       return 'Error';
+    }
+  }
+
+  String calculateItems() {
+    try {
+      double total = cartItems.fold(0,
+          (tot, item) => tot.toDouble() + item.product.price * item.quantity);
+      resultOutput = "\$ ${total.toString()}";
+      return resultOutput;
+    } catch (e) {
+      return 'Error';
+    }
+  }
+
+  getImageButtonDecoration(String text) {
+    switch (text) {
+      case '(':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/qr-code-strong.png"));
+
+      case '7':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/change.png"));
+
+      case '+':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/payment-method.png"));
+      case 'AC':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/trash.png"));
+      case '9':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/calculator.png"));
+      case ')':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/back.png"));
+      case '/':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/report.png"));
+      case '8':
+        return const DecorationImage(
+            image: AssetImage("images/pos_calculator/home.png"));
+      default:
+        return null;
     }
   }
 }
@@ -303,7 +403,7 @@ class CarTile extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.all(5),
-                  height: 50,
+                  height: 40,
                   decoration: BoxDecoration(
                       color: kcontentColor,
                       border: Border.all(color: Colors.grey, width: 2),

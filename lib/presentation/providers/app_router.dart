@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/add_item.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/item_lists.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/stadistics.dart';
+import '../screens/add_item.dart';
+import '../screens/item_lists.dart';
+import '../screens/Stadistics/stadistics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../post_screen/post_main_screen.dart';
-import '../screens/settings.dart';
+import '../screens/Home/HomeBoard.dart';
+import '../screens/PoS/post_main_screen.dart';
+import '../screens/Settings/settings.dart';
+import '../screens/nav_bar.dart';
 
 part 'app_router.g.dart';
 
@@ -18,7 +20,8 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
           path: '/',
           name: 'pos_screen',
-          builder: (context, state) => const MainPoSScreen()),
+          //builder: (context, state) => const MainPoSScreen()
+          builder: (context, state) => const BottomNavBar()),
       GoRoute(
           path: '/settings:name',
           name: 'settings_page',
