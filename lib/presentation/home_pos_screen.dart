@@ -418,9 +418,9 @@ class CarTile extends StatelessWidget {
                           size: 20,
                         ),
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: 2),
                       Text("${item.quantity}"),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: 2),
                       IconButton(
                         onPressed: onAdd,
                         icon: const Icon(
