@@ -6,6 +6,7 @@ import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dar
 import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 
+import '../../domain/qr_code_reader_windows.dart';
 import 'Home/HomeBoard.dart';
 import 'Items/Items.dart';
 import 'post_screen/post_main_screen.dart';
@@ -21,7 +22,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int currentIndex = 0;
   List screens = const [
     Homeboard(),
-    FavoriteScreen(),
+    //FavoriteScreen(),
+    QrReaderCodeWindow(),
     //PostScreen(),
     MainPoSScreen(),
     Stadistics(),
@@ -52,6 +54,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
           },
         ),
         actions: [
+          IconButton(
+              padding: const EdgeInsets.all(10),
+              onPressed: () {},
+              iconSize: 30,
+              style: IconButton.styleFrom(
+                  backgroundColor: kcontentColor,
+                  padding: const EdgeInsets.all(20)),
+              icon: const Icon(Icons.shopping_cart)),
           IconButton(
               onPressed: () {},
               iconSize: 30,

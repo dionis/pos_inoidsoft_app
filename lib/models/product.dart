@@ -61,4 +61,16 @@ final List<Product> products = [
     category: "Watch",
     rate: 4.8,
   ),
+  Product(
+    title: "Dresses",
+    description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec massa sapien faucibus et molestie ac feugiat. In massa tempor nec feugiat nisl. Libero id faucibus nisl tincidunt.",
+    image: "assets/beauty.png",
+    price: 125.33,
+    colors: [
+      Colors.yellowAccent,
+    ],
+    category: "Cloth",
+    rate: 5.8,
+  ),
 ];

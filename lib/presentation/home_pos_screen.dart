@@ -18,6 +18,16 @@ class _HomePosScreenState extends State<HomePosScreen> {
   String userInput = "0";
   String resultOutput = "0";
 
+  List<CartItem> foundItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      foundItems = cartItems;
+    });
+  }
+
   // List<String> buttonList = [
   //   "AC",
   //   "(",
@@ -53,6 +63,10 @@ class _HomePosScreenState extends State<HomePosScreen> {
     "4",
   ];
 
+  get SEARCH_PRODUCT => "Buscar producto";
+
+  String get EMPTY_SEACH_RESULT => "No se encontraron productos";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,7 +74,7 @@ class _HomePosScreenState extends State<HomePosScreen> {
             //appBar: AppBar(),
             body: Column(children: [
       Container(
-        height: MediaQuery.of(context).size.height / 2.90,
+        height: MediaQuery.of(context).size.height / 2.50,
         child: resultWidget(),
       ),
       // const SizedBox(
@@ -75,37 +89,88 @@ class _HomePosScreenState extends State<HomePosScreen> {
 
     return Container(
       color: Colors.amber.shade50,
+      // child: SingleChildScrollView(
       child: Column(
+        // mainAxisSize: MainAxisSize.min,
         children: [
-          ListView.separated(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(20),
-            itemBuilder: (context, index) => CarTile(
-              item: cartItems[index],
-              onRemove: () {
-                setState(() {
-                  if (cartItems[index] != 1) {
-                    cartItems[index].quantity--;
-                  }
-                });
-              },
-              onAdd: () {
-                setState(() {
-                  cartItems[index].quantity++;
-                });
-              },
-            ),
-            separatorBuilder: (context, index) => const SizedBox(height: 5),
-            itemCount: cartItems.length,
+          //  Expanded(
+          Flexible(
+              flex: 1,
+              child: Container(
+                child: TextField(
+                  onChanged: (value) => _onSearchInItems(value),
+                  decoration: InputDecoration(
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey.shade500,
+                      ),
+                      fillColor: const Color.fromRGBO(228, 224, 224, 1),
+                      contentPadding: const EdgeInsets.all(0),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide.none),
+                      hintStyle:
+                          TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                      hintText: SEARCH_PRODUCT),
+                ),
+              )),
+          // child:
+          Flexible(
+            flex: 4,
+            child: foundItems.isNotEmpty
+                ? ListView.separated(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(20),
+                    itemBuilder: (context, index) => CarTile(
+                      item: foundItems[index],
+                      onRemove: () {
+                        setState(() {
+                          if (foundItems[index].quantity != 1) {
+                            foundItems[index].quantity--;
+                          }
+                        });
+                      },
+                      onAdd: () {
+                        setState(() {
+                          foundItems[index].quantity++;
+                        });
+                      },
+                    ),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 5),
+                    itemCount: foundItems.length,
+                  )
+                : Center(
+                    child: Text(EMPTY_SEACH_RESULT,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.normal)),
+                  ),
           ),
+          //),
           const SizedBox(height: 5),
-          Expanded(
-              child: Text(
-            resultOutput,
-            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.end,
-            textDirection: TextDirection.rtl,
-          )),
+          Flexible(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text("\$ ",
+                      style:
+                          TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.end,
+                      textDirection: TextDirection.rtl),
+                  Text(
+                    resultOutput,
+                    style: const TextStyle(
+                        fontSize: 48, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.end,
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
+              )),
           //Container(
           //   padding: const EdgeInsets.all(20),
           //   alignment: Alignment.bottomRight,
@@ -115,6 +180,7 @@ class _HomePosScreenState extends State<HomePosScreen> {
           // )
         ],
       ),
+      //),
 
       //  Column(
       //   mainAxisAlignment: MainAxisAlignment.end,
@@ -149,8 +215,8 @@ class _HomePosScreenState extends State<HomePosScreen> {
       child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: 3,
+            mainAxisSpacing: 3,
           ),
           itemCount: buttonList.length,
           itemBuilder: (context, index) {
@@ -205,7 +271,7 @@ class _HomePosScreenState extends State<HomePosScreen> {
         },
         child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(20),
                 color: getColor(text),
                 image: getImageButtonDecoration(text),
                 boxShadow: [
@@ -277,10 +343,17 @@ class _HomePosScreenState extends State<HomePosScreen> {
   }
 
   String calculateItems() {
+    //Bibliografy: How to show different Currency symbols in flutter
+    //    - https://medium.com/@komolafeezekieldare/step-by-step-in-how-to-display-currency-symbols-like-or-k%C4%8D-in-flutter-ad708a802c49
+    //
+    //  How to use Flexible and Expanded Widget in Flutter
+    //   - https://medium.com/@ramantank04/exploring-flutter-layout-widgets-expanded-and-flexible-e384b351815
+    //
+
     try {
-      double total = cartItems.fold(0,
+      double total = foundItems.fold(0,
           (tot, item) => tot.toDouble() + item.product.price * item.quantity);
-      resultOutput = "\$ ${total.toString()}";
+      resultOutput = total.toString();
       return resultOutput;
     } catch (e) {
       return 'Error';
@@ -318,6 +391,19 @@ class _HomePosScreenState extends State<HomePosScreen> {
       default:
         return null;
     }
+  }
+
+  _onSearchInItems(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        foundItems = cartItems;
+      } else {
+        foundItems = cartItems
+            .where((items) =>
+                items.product.title.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+      }
+    });
   }
 }
 
@@ -393,14 +479,6 @@ class CarTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Ionicons.trash_outline,
-                    color: Colors.red,
-                    size: 20,
-                  ),
-                ),
                 Container(
                   padding: const EdgeInsets.all(5),
                   height: 40,
@@ -431,7 +509,15 @@ class CarTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Ionicons.trash_outline,
+                    color: Colors.red,
+                    size: 20,
+                  ),
+                ),
               ],
             ))
       ],
