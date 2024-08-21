@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-class ScannedBarcodeLabel extends StatelessWidget {
+class ScannedBarcodeLabel extends ConsumerWidget {
   const ScannedBarcodeLabel({
     super.key,
     required this.barcodes,
@@ -10,7 +11,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
   final Stream<BarcodeCapture> barcodes;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder(
       stream: barcodes,
       builder: (context, snapshot) {

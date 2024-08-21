@@ -5,6 +5,12 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'scanner_barcode_label.dart';
 import 'scanner_error_widget.dart';
 
+final _formKey = GlobalKey<FormState>();
+const String PRODUCT_NAME = "Nombre del producto";
+const String ERROR_TEXT_PRODUCT_NAME = "El nombre del producto es obligatorio";
+const String ADD_PRODUCT = "Añadir producto";
+const String PRODUCT_PRICE = "Precio del Producto";
+
 class QrReaderCodeWindow extends StatefulWidget {
   const QrReaderCodeWindow({super.key});
 
@@ -102,12 +108,79 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
           _buildScanWindow(scanWindow),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              height: 100,
-              color: Colors.black.withOpacity(0.4),
-              child: ScannedBarcodeLabel(barcodes: controller.barcodes),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    height: 100,
+                    color: Colors.black.withOpacity(0.4),
+                    child: ScannedBarcodeLabel(barcodes: controller.barcodes),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.9),
+                      child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  maxLength: 20,
+                                  decoration: const InputDecoration(
+                                      label: Text(PRODUCT_NAME)),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return ERROR_TEXT_PRODUCT_NAME;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      maxLength: 20,
+                                      decoration: const InputDecoration(
+                                          label: Text(PRODUCT_PRICE)),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return ERROR_TEXT_PRODUCT_NAME;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Container())
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              FilledButton(
+                                  onPressed: () {},
+                                  style: FilledButton.styleFrom(
+                                      backgroundColor: Colors.white30,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4))),
+                                  child: Text(ADD_PRODUCT)),
+                            ],
+                          ))),
+                ),
+              ],
             ),
           ),
         ],

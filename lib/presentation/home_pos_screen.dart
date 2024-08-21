@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 
 import '../domain/qr_code_reader_windows.dart';
 import '../models/cart_item.dart';
+import 'providers/config_state_variables.dart';
 
-class HomePosScreen extends StatefulWidget {
+class HomePosScreen extends ConsumerStatefulWidget {
   const HomePosScreen({super.key});
 
   @override
-  State<HomePosScreen> createState() => _HomePosScreenState();
+  ConsumerState<HomePosScreen> createState() => _HomePosScreenState();
 }
 
-class _HomePosScreenState extends State<HomePosScreen> {
+class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   String userInput = "0";
   String resultOutput = "0";
 
@@ -314,18 +316,21 @@ class _HomePosScreenState extends State<HomePosScreen> {
 
       return;
     } else if (text == '(') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          //QR Reader see mor examples in:
-          //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     //QR Reader see mor examples in:
+      //     //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
 
-          //and about the library
-          // https://pub.dev/packages/mobile_scanner/
+      //     //and about the library
+      //     // https://pub.dev/packages/mobile_scanner/
 
-          builder: (context) => const QrReaderCodeWindow(),
-        ),
-      );
+      //     builder: (context) => const QrReaderCodeWindow(),
+      //   ),
+      // );
 
+      ref
+          .read(currentIndexProvider.notifier)
+          .updateCurrentMainWidget("QrReaderCodeWindow", 1);
       return;
     }
 

@@ -2,38 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/pos_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/home_screen.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/qr_code_reader_windows.dart';
 import 'Home/HomeBoard.dart';
 import 'Items/Items.dart';
 import 'post_screen/post_main_screen.dart';
 
-class BottomNavBar extends StatefulWidget {
+class BottomNavBar extends ConsumerStatefulWidget {
   const BottomNavBar({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  ConsumerState<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
-  int currentIndex = 0;
+class _BottomNavBarState extends ConsumerState<BottomNavBar> {
+  int currentIndexReference = 0;
   List screens = const [
     Homeboard(),
     //FavoriteScreen(),
     QrReaderCodeWindow(),
     //PostScreen(),
     MainPoSScreen(),
-    Stadistics(),
-    Homeboard(),
     ItemListScreen(),
-    Scaffold()
+    Stadistics(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    currentIndexReference = ref.watch(currentIndexProvider);
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -75,7 +76,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
         heroTag: "Unique",
         onPressed: () {
           setState(() {
-            currentIndex = 2;
+            //currentIndexReference = 2;
+
+            ref
+                .read(currentIndexProvider.notifier)
+                .updateCurrentMainWidget("MainPoSScreen", 2);
           });
         },
         backgroundColor: kprimaryColor,
@@ -101,26 +106,35 @@ class _BottomNavBarState extends State<BottomNavBar> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    currentIndex = 0;
+                    //currentIndexReference = 0;
+                    ref
+                        .read(currentIndexProvider.notifier)
+                        .updateCurrentMainWidget("Homeboard", 0);
                   });
                 },
                 icon: Icon(
                   Icons.grid_view_outlined,
                   size: 30,
-                  color:
-                      currentIndex == 0 ? kprimaryColor : Colors.grey.shade400,
+                  color: currentIndexReference == 0
+                      ? kprimaryColor
+                      : Colors.grey.shade400,
                 )),
             IconButton(
                 onPressed: () {
                   setState(() {
-                    currentIndex = 1;
+                    //currentIndexReference = 1;
+
+                    ref
+                        .read(currentIndexProvider.notifier)
+                        .updateCurrentMainWidget("QrReaderCodeWindow", 1);
                   });
                 },
                 icon: Icon(
                   Icons.favorite_border,
                   size: 30,
-                  color:
-                      currentIndex == 1 ? kprimaryColor : Colors.grey.shade400,
+                  color: currentIndexReference == 1
+                      ? kprimaryColor
+                      : Colors.grey.shade400,
                 )),
             const SizedBox(
               width: 15,
@@ -128,43 +142,56 @@ class _BottomNavBarState extends State<BottomNavBar> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    currentIndex = 2;
+                    //currentIndexReference = 2;
+
+                    ref
+                        .read(currentIndexProvider.notifier)
+                        .updateCurrentMainWidget("MainPoSScreen", 2);
                   });
                 },
                 icon: Icon(
                   Icons.shopping_cart_outlined,
                   size: 30,
-                  color:
-                      currentIndex == 2 ? kprimaryColor : Colors.grey.shade400,
+                  color: currentIndexReference == 2
+                      ? kprimaryColor
+                      : Colors.grey.shade400,
                 )),
             IconButton(
                 onPressed: () {
                   setState(() {
-                    currentIndex = 3;
+                    //currentIndexReference = 3;
+                    ref
+                        .read(currentIndexProvider.notifier)
+                        .updateCurrentMainWidget("ItemListScreen", 3);
                   });
                 },
                 icon: Icon(
                   Icons.person,
                   size: 30,
-                  color:
-                      currentIndex == 3 ? kprimaryColor : Colors.grey.shade400,
+                  color: currentIndexReference == 3
+                      ? kprimaryColor
+                      : Colors.grey.shade400,
                 )),
             IconButton(
                 onPressed: () {
                   setState(() {
-                    currentIndex = 4;
+                    //currentIndexReference = 4;
+                    ref
+                        .read(currentIndexProvider.notifier)
+                        .updateCurrentMainWidget("Stadistics", 4);
                   });
                 },
                 icon: Icon(
-                  Icons.grid_view_outlined,
+                  Icons.query_stats_sharp,
                   size: 30,
-                  color:
-                      currentIndex == 4 ? kprimaryColor : Colors.grey.shade400,
+                  color: currentIndexReference == 4
+                      ? kprimaryColor
+                      : Colors.grey.shade400,
                 )),
           ],
         ),
       ),
-      body: screens[currentIndex],
+      body: screens[currentIndexReference],
       drawer: const CustomDrawer(),
     );
   }
