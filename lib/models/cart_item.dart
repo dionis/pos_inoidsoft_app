@@ -8,7 +8,12 @@ class CartItem {
 }
 
 List<CartItem> cartItems = [
-  CartItem(quantity: 2, product: products[0]),
+  // CartItem(quantity: 2, product: products[0]),
   CartItem(quantity: 1, product: products[1]),
-  CartItem(quantity: 15, product: products[2])
+  CartItem(quantity: 15, product: products[2]),
+  // CartItem(quantity: 2, product: products[3]),
+  CartItem(quantity: 7, product: products[4]),
+  CartItem(quantity: 1, product: products[5]),
+  CartItem(quantity: 1, product: products[6]),
+  CartItem(quantity: 1, product: products[7]),
 ];

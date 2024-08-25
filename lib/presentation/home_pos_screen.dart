@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/chage_currency.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/payment_method.dart';
 
 import '../domain/qr_code_reader_windows.dart';
 import '../models/cart_item.dart';
@@ -68,6 +70,8 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   get SEARCH_PRODUCT => "Buscar producto";
 
   String get EMPTY_SEACH_RESULT => "No se encontraron productos";
+
+  late BuildContext oldDialogContext;
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +245,8 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
       case "=":
       case "AC":
         return Colors.white;
+      case "4":
+        return Colors.blueGrey;
       default:
         return Colors.blue;
     }
@@ -292,47 +298,150 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
 
   handleButtonPress(String text) {
     //Continue on https://youtu.be/Yc9U62-Tr-0?list=PLvG2mD7Ba5Sw0TKZwIW_7nNbihTRc8VN4&t=948
-    if (text == 'AC') {
-      userInput = "";
-      resultOutput = "0";
-      return;
-    } else if (text == 'C') {
-      if (userInput.isNotEmpty) {
-        userInput = userInput.substring(0, userInput.length - 1);
+
+    switch (text) {
+      case 'AC':
+        //Delete option
+        userInput = "";
+        resultOutput = "0";
         return;
-      } else {
-        return null;
-      }
-    } else if (text == '=') {
-      resultOutput = calculate();
+      case 'C':
+        if (userInput.isNotEmpty) {
+          userInput = userInput.substring(0, userInput.length - 1);
+          return;
+        } else {
+          return null;
+        }
+      case '=':
+        resultOutput = calculate();
 
-      if (userInput.endsWith(".0")) {
-        userInput = userInput.replaceAll(".0", "");
-      }
+        if (userInput.endsWith(".0")) {
+          userInput = userInput.replaceAll(".0", "");
+        }
 
-      if (resultOutput.endsWith(".0")) {
-        resultOutput = resultOutput.replaceAll(".0", "");
-      }
+        if (resultOutput.endsWith(".0")) {
+          resultOutput = resultOutput.replaceAll(".0", "");
+        }
 
-      return;
-    } else if (text == '(') {
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     //QR Reader see mor examples in:
-      //     //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
+        return;
+      case '(':
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("QrReaderCodeWindow", 1);
+        return;
+      case '/':
+        //Item list
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("ItemListScreen", 3);
+        return;
+      case '9':
+        //Calculator
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("Calculator", 5);
+        return;
+      case '7':
+        //Show window selection for diferent payment methods for chance mony price
+        //MLC, USD, EURO, CUP
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext dialogContext) {
+              oldDialogContext = dialogContext;
+              return ChangeCurremcyDialog(
+                title: 'Title Change Currency',
+                content: 'Dialog content',
+                actions: <Widget>[
+                  Container(
+                    height: 60,
+                    width: 180,
+                    child: FloatingActionButton(
+                      onPressed: onDismiss,
+                      child: const Text('Dismiss dialog'),
+                    ),
+                  ),
+                ],
+              );
+            });
 
-      //     //and about the library
-      //     // https://pub.dev/packages/mobile_scanner/
+        break;
+      case '+':
+        //Payment
+        //Show window selection for diferent payment methods using Transfermovil, EnZone
+        //Pay in chash, dual (Payment gateway and cash)
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext dialogContext) {
+              oldDialogContext = dialogContext;
+              return PaymentMethodDialog(
+                title: 'Title Payment Method',
+                content: 'Dialog content',
+                actions: <Widget>[
+                  Container(
+                    height: 60,
+                    width: 180,
+                    child: FloatingActionButton(
+                      onPressed: onDismiss,
+                      child: const Text('Dismiss dialog'),
+                    ),
+                  ),
+                ],
+              );
+            });
 
-      //     builder: (context) => const QrReaderCodeWindow(),
-      //   ),
-      // );
+        break;
+      case '8':
+        //Home
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("Homeboard", 0);
 
-      ref
-          .read(currentIndexProvider.notifier)
-          .updateCurrentMainWidget("QrReaderCodeWindow", 1);
-      return;
+        return;
     }
+
+    // if (text == 'AC') {
+    //   userInput = "";
+    //   resultOutput = "0";
+    //   return;
+    // } else if (text == 'C') {
+    //   if (userInput.isNotEmpty) {
+    //     userInput = userInput.substring(0, userInput.length - 1);
+    //     return;
+    //   } else {
+    //     return null;
+    //   }
+    // } else if (text == '=') {
+    //   resultOutput = calculate();
+
+    //   if (userInput.endsWith(".0")) {
+    //     userInput = userInput.replaceAll(".0", "");
+    //   }
+
+    //   if (resultOutput.endsWith(".0")) {
+    //     resultOutput = resultOutput.replaceAll(".0", "");
+    //   }
+
+    //   return;
+    // } else if (text == '(') {
+    //   // Navigator.of(context).push(
+    //   //   MaterialPageRoute(
+    //   //     //QR Reader see mor examples in:
+    //   //     //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
+
+    //   //     //and about the library
+    //   //     // https://pub.dev/packages/mobile_scanner/
+
+    //   //     builder: (context) => const QrReaderCodeWindow(),
+    //   //   ),
+    //   // );
+
+    //   ref
+    //       .read(currentIndexProvider.notifier)
+    //       .updateCurrentMainWidget("QrReaderCodeWindow", 1);
+    //   return;
+    // }
 
     userInput = userInput + text;
   }
@@ -358,7 +467,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
     try {
       double total = foundItems.fold(0,
           (tot, item) => tot.toDouble() + item.product.price * item.quantity);
-      resultOutput = total.toString();
+      resultOutput = total.toStringAsFixed(2);
       return resultOutput;
     } catch (e) {
       return 'Error';
@@ -410,6 +519,13 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
       }
     });
   }
+
+  onDismiss() {
+    if (oldDialogContext != null) {
+      Navigator.of(oldDialogContext).pop();
+    }
+    //oldDialogContext = null;
+  }
 }
 
 //Bibliografy
@@ -450,7 +566,9 @@ class CarTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.product.title,
+                      item.product.title.length < 15
+                          ? item.product.title
+                          : item.product.title.substring(0, 15),
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),

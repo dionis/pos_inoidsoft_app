@@ -14,7 +14,11 @@ OCR read image files.
     - OCR image lector
 
 ##Bibliografy
+- Scaner QR Code in FLutter
+  -  [How to Scan QR Codes in Flutter](https://onlyflutter.com/how-to-scan-qr-codes-in-flutter/)
+  -  [Flutter | Building a QR code scanner for Web, Android & iOS](https://medium.com/@robyeatesuk/flutter-building-a-qr-code-scanner-for-web-android-ios-267429dfe2ff)
 
+ 
 - Change app name 
     [Flutter | How to - Cambiar App Icon y el App Name](https://www.youtube.com/watch?v=YCsVpXrLlME)
   
@@ -26,3 +30,24 @@ OCR read image files.
 
 - Form validation
 [Flutter Forms Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9ighyCUUmoaxz9CZsUz4Iwf)
+
+
+## Easy conver JSON class to Dart Class (there are other languages)
+
+- https://app.quicktype.io/
+
+- Check is string is number and another utilies in String validation event
+    [string_validator](https://pub.dev/packages/string_validator)
+
+- Show Toas Message in Flutter
+    [flutter_toast](https://pub.dev/packages/fluttertoast)
+
+- Show Popup Message in Flutter
+   
+   [How to pop up Flutter Dialog on any screen](https://medium.com/@dltruong.c/how-to-pop-up-flutter-dialog-on-any-screen-d82ccaac48af)   
+
+
+   [showDialog<T> function ](https://api.flutter.dev/flutter/material/showDialog.html)
+
+
+   [showModalBottomSheet<T> function](https://api.flutter.dev/flutter/material/showModalBottomSheet.html) 

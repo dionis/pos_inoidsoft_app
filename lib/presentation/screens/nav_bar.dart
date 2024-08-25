@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/pos_screen.dart';
-import 'package:pos_inoidsoft_app/presentation/home_screen.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/qr_code_reader_windows.dart';
+import '../../models/cart_item.dart';
 import 'Home/HomeBoard.dart';
 import 'Items/Items.dart';
 import 'post_screen/post_main_screen.dart';
@@ -29,6 +31,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     MainPoSScreen(),
     ItemListScreen(),
     Stadistics(),
+    CalculatorScreen()
   ];
 
   @override
@@ -55,14 +58,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
           },
         ),
         actions: [
-          IconButton(
-              padding: const EdgeInsets.all(10),
-              onPressed: () {},
-              iconSize: 30,
-              style: IconButton.styleFrom(
-                  backgroundColor: kcontentColor,
-                  padding: const EdgeInsets.all(20)),
-              icon: const Icon(Icons.shopping_cart)),
+          _shoopingCartBadget(),
           IconButton(
               onPressed: () {},
               iconSize: 30,
@@ -193,6 +189,36 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
       ),
       body: screens[currentIndexReference],
       drawer: const CustomDrawer(),
+    );
+  }
+
+  Widget _shoopingCartBadget() {
+    return badges.Badge(
+      position: badges.BadgePosition.topEnd(top: 0, end: 3),
+      badgeAnimation: const badges.BadgeAnimation.slide(
+          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+          // curve: Curves.easeInCubic,
+          ),
+      showBadge: cartItems.isNotEmpty,
+      badgeStyle: const badges.BadgeStyle(
+        badgeColor: Colors.red,
+      ),
+      badgeContent: Text(
+        cartItems.length.toString(),
+        style: const TextStyle(color: Colors.white),
+      ),
+      child: IconButton(
+          icon: const Icon(Icons.shopping_cart),
+          style: IconButton.styleFrom(
+              backgroundColor: kcontentColor,
+              padding: const EdgeInsets.all(20)),
+          onPressed: () {
+            setState(() {
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("MainPoSScreen", 2);
+            });
+          }),
     );
   }
 }

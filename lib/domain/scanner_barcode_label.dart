@@ -10,6 +10,9 @@ class ScannedBarcodeLabel extends ConsumerWidget {
 
   final Stream<BarcodeCapture> barcodes;
 
+  final String SCAN_PRODUCT_LABEL = 'Scanee el QR del producto';
+  // 'Scan something!';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder(
@@ -18,17 +21,23 @@ class ScannedBarcodeLabel extends ConsumerWidget {
         final scannedBarcodes = snapshot.data?.barcodes ?? [];
 
         if (scannedBarcodes.isEmpty) {
-          return const Text(
-            'Scan something!',
+          return Text(
+            SCAN_PRODUCT_LABEL,
             overflow: TextOverflow.fade,
             style: TextStyle(color: Colors.white),
           );
         }
 
-        return Text(
-          scannedBarcodes.first.displayValue ?? 'No display value.',
+        // return Text(
+        //   scannedBarcodes.first.displayValue ?? 'No display value.',
+        //   overflow: TextOverflow.fade,
+        //   style: const TextStyle(color: Colors.white),
+        // );
+
+        return const Text(
+          '',
           overflow: TextOverflow.fade,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
         );
       },
     );

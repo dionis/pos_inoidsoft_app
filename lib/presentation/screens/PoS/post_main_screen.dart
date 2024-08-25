@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
-import "package:pos_inoidsoft_app/presentation/home_screen.dart";
+//import "package:pos_inoidsoft_app/presentation/home_screen.dart";
 
 import "../../../domain/qr_code_reader_windows.dart";
 import "../../widgets/custom_button_pos.dart";

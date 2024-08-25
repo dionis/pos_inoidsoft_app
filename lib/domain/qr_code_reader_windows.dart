@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
+import 'package:pos_inoidsoft_app/models/product.dart';
+import 'package:string_validator/string_validator.dart';
 import 'scanner_barcode_label.dart';
 import 'scanner_error_widget.dart';
 
@@ -20,6 +25,9 @@ class QrReaderCodeWindow extends StatefulWidget {
 
 class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
   final MobileScannerController controller = MobileScannerController();
+
+  String NOT_READ_QR_CODE = 'No se ha leido el código QR del producto';
+  bool showBottomSheetForm = true;
 
   Widget _buildBarcodeOverlay() {
     return ValueListenableBuilder(
@@ -91,7 +99,7 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('With Scan window')),
+      //appBar: AppBar(title: const Text('With Scan window')),
       backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
@@ -103,86 +111,54 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
             errorBuilder: (context, error, child) {
               return ScannerErrorWidget(error: error);
             },
+            onDetect: (BarcodeCapture capture) async {
+              final List<Barcode> barcodes = capture.barcodes;
+              final Barcode barcode = barcodes.first;
+              final String data = barcode.rawValue ?? NOT_READ_QR_CODE;
+
+              if (NOT_READ_QR_CODE != data && showBottomSheetForm == true) {
+                showBottomSheetForm = !showBottomSheetForm;
+
+                //Parse JSON from QR read
+                //
+                //
+                try {
+                  final productJson = jsonDecode(data);
+                  final Product qrReadProduct = Product.fromJson(productJson);
+
+                  //Find if exist in Data Base current Product
+                  // - It was updated recientelly use the dada base information
+                  // - Update information set quantity in on
+                  // - Add in Current Buy list as firtst element
+                  // - Go to POS Cashier page
+                  Fluttertoast.showToast(
+                      msg: "IS ALPHANUMERIC: ${qrReadProduct.title}",
+                      toastLength: Toast.LENGTH_SHORT);
+                } on FormatException catch (e) {
+                  //Validate if only numbers about barcode
+                  validateIfAlphanumericBarCode(data);
+                } catch (e) {
+                  validateIfAlphanumericBarCode(data);
+                }
+              } else {
+                Future.delayed(const Duration(seconds: 10), () {
+                  showBottomSheetForm = true;
+                });
+              }
+            },
           ),
           _buildBarcodeOverlay(),
           _buildScanWindow(scanWindow),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    height: 100,
-                    color: Colors.black.withOpacity(0.4),
-                    child: ScannedBarcodeLabel(barcodes: controller.barcodes),
-                  ),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.9),
-                      child: Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  maxLength: 20,
-                                  decoration: const InputDecoration(
-                                      label: Text(PRODUCT_NAME)),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return ERROR_TEXT_PRODUCT_NAME;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextFormField(
-                                      maxLength: 20,
-                                      decoration: const InputDecoration(
-                                          label: Text(PRODUCT_PRICE)),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return ERROR_TEXT_PRODUCT_NAME;
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: Container())
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              FilledButton(
-                                  onPressed: () {},
-                                  style: FilledButton.styleFrom(
-                                      backgroundColor: Colors.white30,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4))),
-                                  child: Text(ADD_PRODUCT)),
-                            ],
-                          ))),
-                ),
-              ],
-            ),
-          ),
+              alignment: Alignment.topCenter,
+              child: Container(
+                alignment: Alignment.topCenter,
+                // padding:
+                //     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                // height: 100,
+                color: Colors.black.withOpacity(0.4),
+                child: ScannedBarcodeLabel(barcodes: controller.barcodes),
+              )),
         ],
       ),
     );
@@ -192,6 +168,23 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
   Future<void> dispose() async {
     super.dispose();
     await controller.dispose();
+  }
+
+  void validateIfAlphanumericBarCode(String data) {
+    if (data.isAlphanumeric) {
+      Fluttertoast.showToast(
+          msg: "IS ALPHANUMERIC: ${data}", toastLength: Toast.LENGTH_SHORT);
+
+      // - It was updated recientelly use the dada base information
+      // - Update information set quantity in on
+      // - Add in Current Buy list as firtst element
+      // - Go to POS Cashier page
+    } else {
+      Fluttertoast.showToast(
+          msg: "Not alphanumeric: ${data} please SCAN a corret QR or Barcode",
+          toastLength: Toast.LENGTH_SHORT);
+      //Stay in page since user go to another option
+    }
   }
 }
 

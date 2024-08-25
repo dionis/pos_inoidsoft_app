@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class CalculatorScreen extends StatefulWidget {
+  const CalculatorScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<CalculatorScreen> createState() => _CalculatorScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _CalculatorScreenState extends State<CalculatorScreen> {
   String userInput = "0";
   String resultOutput = "0";
 
