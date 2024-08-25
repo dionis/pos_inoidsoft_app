@@ -23,6 +23,7 @@ class BottomNavBar extends ConsumerStatefulWidget {
 
 class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int currentIndexReference = 0;
+  int shoppingCartSizeReference = 0;
   List screens = const [
     Homeboard(),
     //FavoriteScreen(),
@@ -126,7 +127,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                   });
                 },
                 icon: Icon(
-                  Icons.favorite_border,
+                  Icons.qr_code_scanner_rounded,
                   size: 30,
                   color: currentIndexReference == 1
                       ? kprimaryColor
@@ -162,7 +163,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                   });
                 },
                 icon: Icon(
-                  Icons.person,
+                  Icons.format_list_bulleted_add,
                   size: 30,
                   color: currentIndexReference == 3
                       ? kprimaryColor
@@ -193,6 +194,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   }
 
   Widget _shoopingCartBadget() {
+    shoppingCartSizeReference = ref.watch(shoppinCartSizeProvider);
+
     return badges.Badge(
       position: badges.BadgePosition.topEnd(top: 0, end: 3),
       badgeAnimation: const badges.BadgeAnimation.slide(
@@ -204,7 +207,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         badgeColor: Colors.red,
       ),
       badgeContent: Text(
-        cartItems.length.toString(),
+        shoppingCartSizeReference.toString(),
         style: const TextStyle(color: Colors.white),
       ),
       child: IconButton(

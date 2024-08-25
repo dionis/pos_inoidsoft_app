@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
+import 'package:pos_inoidsoft_app/models/product.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/chage_currency.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/payment_method.dart';
 
@@ -28,43 +29,19 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   void initState() {
     super.initState();
     setState(() {
-      foundItems = cartItems;
+      foundItems = cartItems.reversed.toList();
     });
   }
-
-  // List<String> buttonList = [
-  //   "AC",
-  //   "(",
-  //   ")",
-  //   "/",
-  //   "7",
-  //   "8",
-  //   "9",
-  //   "+",
-  //   "4",
-  //   "5",
-  //   "6",
-  //   "*",
-  //   "1",
-  //   "2",
-  //   "3",
-  //   "-",
-  //   "C",
-  //   "0",
-  //   ".",
-  //   "="
-  // ];
 
   List<String> buttonList = [
     "AC",
     "(",
+    "7",
     ")",
     "/",
-    "7",
     "8",
     "9",
     "+",
-    "4",
   ];
 
   get SEARCH_PRODUCT => "Buscar producto";
@@ -80,13 +57,10 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
             //appBar: AppBar(),
             body: Column(children: [
       Container(
-        height: MediaQuery.of(context).size.height / 2.50,
+        height: MediaQuery.of(context).size.height / 1.80,
         child: resultWidget(),
       ),
-      // const SizedBox(
-      //   width: 5,
-      // ),
-      Expanded(child: buttomWidget())
+      Expanded(child: buttomWidget()),
     ])));
   }
 
@@ -142,6 +116,15 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                           foundItems[index].quantity++;
                         });
                       },
+                      onDeleteItem: () {
+                        setState(() {
+                          cartItems.removeAt(index);
+                          foundItems.removeAt(index);
+                          ref
+                              .read(shoppinCartSizeProvider.notifier)
+                              .updateShoppingCartSize(cartItems.length);
+                        });
+                      },
                     ),
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 5),
@@ -177,58 +160,22 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                   ),
                 ],
               )),
-          //Container(
-          //   padding: const EdgeInsets.all(20),
-          //   alignment: Alignment.bottomRight,
-          //   child: Text(resultOutput,
-          //       style:
-          //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-          // )
         ],
       ),
-      //),
-
-      //  Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: [
-      //     //Search input for filter buyer in a car
-      //     //ListView with all Product with filter
-      //     // Container(
-      //     //   padding: const EdgeInsets.all(20),
-      //     //   alignment: Alignment.bottomRight,
-      //     //   child: Text(userInput,
-      //     //       style:
-      //     //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-      //     // ),
-
-      //     //const SizedBox(height: 5),
-      //     // Container(
-      //     //   padding: const EdgeInsets.all(20),
-      //     //   alignment: Alignment.bottomRight,
-      //     //   child: Text(resultOutput,
-      //     //       style:
-      //     //           const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-      //     // )
-      //   ],
-      // ),
     );
   }
 
   buttomWidget() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      color: const Color.fromARGB(66, 233, 232, 232),
-      child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 3,
-            mainAxisSpacing: 3,
-          ),
-          itemCount: buttonList.length,
-          itemBuilder: (context, index) {
-            return showButton(buttonList[index]);
-          }),
-    );
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+        ),
+        itemCount: buttonList.length,
+        itemBuilder: (context, index) {
+          return showButton(buttonList[index]);
+        });
   }
 
   getColor(String text) {
@@ -241,14 +188,14 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
       case "-":
       case "C":
       case ")":
-        return Colors.redAccent;
+        return Colors.white;
       case "=":
       case "AC":
         return Colors.white;
       case "4":
-        return Colors.blueGrey;
+        return Colors.grey.shade200;
       default:
-        return Colors.blue;
+        return Colors.white;
     }
   }
 
@@ -288,11 +235,11 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                       blurRadius: 1,
                       spreadRadius: 1)
                 ]),
-            child: Center(
-                child: Text(text,
-                    style: const TextStyle(
+            child: const Center(
+                child: Text('',
+                    style: TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold)))));
   }
 
@@ -401,48 +348,6 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         return;
     }
 
-    // if (text == 'AC') {
-    //   userInput = "";
-    //   resultOutput = "0";
-    //   return;
-    // } else if (text == 'C') {
-    //   if (userInput.isNotEmpty) {
-    //     userInput = userInput.substring(0, userInput.length - 1);
-    //     return;
-    //   } else {
-    //     return null;
-    //   }
-    // } else if (text == '=') {
-    //   resultOutput = calculate();
-
-    //   if (userInput.endsWith(".0")) {
-    //     userInput = userInput.replaceAll(".0", "");
-    //   }
-
-    //   if (resultOutput.endsWith(".0")) {
-    //     resultOutput = resultOutput.replaceAll(".0", "");
-    //   }
-
-    //   return;
-    // } else if (text == '(') {
-    //   // Navigator.of(context).push(
-    //   //   MaterialPageRoute(
-    //   //     //QR Reader see mor examples in:
-    //   //     //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
-
-    //   //     //and about the library
-    //   //     // https://pub.dev/packages/mobile_scanner/
-
-    //   //     builder: (context) => const QrReaderCodeWindow(),
-    //   //   ),
-    //   // );
-
-    //   ref
-    //       .read(currentIndexProvider.notifier)
-    //       .updateCurrentMainWidget("QrReaderCodeWindow", 1);
-    //   return;
-    // }
-
     userInput = userInput + text;
   }
 
@@ -465,8 +370,10 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
     //
 
     try {
-      double total = foundItems.fold(0,
-          (tot, item) => tot.toDouble() + item.product.price * item.quantity);
+      double total = foundItems.fold(
+          0,
+          (tot, item) =>
+              tot.toDouble() + (item.product?.price ?? 1) * item.quantity);
       resultOutput = total.toStringAsFixed(2);
       return resultOutput;
     } catch (e) {
@@ -513,8 +420,9 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         foundItems = cartItems;
       } else {
         foundItems = cartItems
-            .where((items) =>
-                items.product.title.toLowerCase().contains(value.toLowerCase()))
+            .where((items) => (items.product?.title ?? "")
+                .toLowerCase()
+                .contains(value.toLowerCase()))
             .toList();
       }
     });
@@ -536,12 +444,23 @@ class CarTile extends StatelessWidget {
   CartItem item;
   Function() onAdd;
   Function() onRemove;
+  Function() onDeleteItem;
+
+  late BuildContext oldDialogContextTile;
+
+  String DELETE_ITEM_TITLE = 'Eliminar producto';
+
+  String DELETE_ITEM_MESSAGE = '¿ Desea elimiar este producto ?';
+
+  String CANCEL_BUTTON_LABEL = 'Cancelar';
+  String DELETE_BUTTON_LABEL = 'Eliminar';
 
   CarTile(
       {super.key,
       required this.item,
       required this.onAdd,
-      required this.onRemove});
+      required this.onRemove,
+      required this.onDeleteItem});
 
   @override
   Widget build(BuildContext context) {
@@ -559,16 +478,16 @@ class CarTile extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: kcontentColor,
                       borderRadius: BorderRadius.circular(20)),
-                  child: Image.asset(item.product.image),
+                  child: Image.asset(validateItemImage(item.product)),
                 ),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.product.title.length < 15
-                          ? item.product.title
-                          : item.product.title.substring(0, 15),
+                      (item.product?.title ?? "").length < 15
+                          ? item.product?.title ?? ""
+                          : (item.product?.title ?? "").substring(0, 15),
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -576,7 +495,7 @@ class CarTile extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      item.product.category,
+                      item.product?.category ?? "",
                       style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -586,7 +505,7 @@ class CarTile extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      "\$${item.product.price}",
+                      "\$${item.product?.price}",
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -634,7 +553,43 @@ class CarTile extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext dialogContext) {
+                          oldDialogContextTile = dialogContext;
+
+                          return ChangeCurremcyDialog(
+                            title: DELETE_ITEM_TITLE,
+                            content: DELETE_ITEM_MESSAGE,
+                            actions: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: 110,
+                                    child: FloatingActionButton(
+                                      onPressed: onDismissTile,
+                                      child: Text(CANCEL_BUTTON_LABEL),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 110,
+                                    child: FloatingActionButton(
+                                      onPressed: onAcceptDeleteTile,
+                                      child: Text(DELETE_BUTTON_LABEL),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          );
+                        });
+                  },
                   icon: const Icon(
                     Ionicons.trash_outline,
                     color: Colors.red,
@@ -645,5 +600,35 @@ class CarTile extends StatelessWidget {
             ))
       ],
     );
+  }
+
+  String validateItemImage(Product? product) {
+    return product == null || product.image == ''
+        ? "assets/no-image.jpg"
+        : product.image;
+  }
+
+  void onDismissTile() {
+    if (oldDialogContextTile != null) {
+      Navigator.of(oldDialogContextTile).pop();
+    }
+  }
+
+  void onAcceptDeleteTile() {
+    onDeleteItem();
+
+    if (oldDialogContextTile != null) {
+      Navigator.of(oldDialogContextTile).pop();
+    }
+
+    // CartItem existItemInCart;
+
+    // try {
+    //   existItemInCart = cartItems.firstWhere(
+    //       (element) => element?.product?.title == item.product?.title,
+    //       orElse: () => CartItem(quantity: 1, product: null));
+    // } catch (e) {
+    //   existItemInCart = CartItem(quantity: 1, product: null);
+    // }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../models/cart_item.dart';
 part 'config_state_variables.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -29,5 +31,17 @@ class CurrentIndex extends _$CurrentIndex {
         state = 5;
         break;
     }
+  }
+}
+
+@Riverpod(keepAlive: true)
+class ShoppinCartSize extends _$ShoppinCartSize {
+  @override
+  int build() {
+    return cartItems.length;
+  }
+
+  updateShoppingCartSize(int size) {
+    state = size;
   }
 }

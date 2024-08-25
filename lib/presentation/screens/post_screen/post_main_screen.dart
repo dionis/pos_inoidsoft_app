@@ -19,43 +19,7 @@ class _MainPoSScreenState extends State<MainPoSScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: Column(
-      //   //mainAxisAlignment: MainAxisAlignment.start,
-      //   children: [
-      //     CustomButtonPoS(
-      //         icon: Icons.plus_one,
-      //         onPress: () {
-      //           Navigator.of(context).push(
-      //             MaterialPageRoute(
-      //               //QR Reader see mor examples in:
-      //               //https://github.com/juliansteenbakker/mobile_scanner/blob/master/example/lib/
-
-      //               //and about the library
-      //               // https://pub.dev/packages/mobile_scanner/
-
-      //               builder: (context) => const QrReaderCodeWindow(),
-      //             ),
-      //           );
-
-      //           clickCounter++;
-      //           //Order to update all the view with modified
-      //           setState(() {});
-      //         }),
-      //   ],
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: const HomePosScreen(),
-
-      // const SizedBox(
-      //   height: 10,
-      // ),
-      // CustomButton(
-      //     icon: Icons.exposure_minus_1_outlined,
-      //     onPress: () {
-      //       if (clickCounter == 0) return;
-      //       clickCounter--; //Order to update all the view with modified
-      //       setState(() {});
-      //     })
     );
   }
 }

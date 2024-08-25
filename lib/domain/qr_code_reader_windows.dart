@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:pos_inoidsoft_app/models/product.dart';
 import 'package:string_validator/string_validator.dart';
+import '../models/cart_item.dart';
+import '../presentation/providers/config_state_variables.dart';
 import 'scanner_barcode_label.dart';
 import 'scanner_error_widget.dart';
 
@@ -16,18 +20,25 @@ const String ERROR_TEXT_PRODUCT_NAME = "El nombre del producto es obligatorio";
 const String ADD_PRODUCT = "Añadir producto";
 const String PRODUCT_PRICE = "Precio del Producto";
 
-class QrReaderCodeWindow extends StatefulWidget {
+class QrReaderCodeWindow extends ConsumerStatefulWidget {
   const QrReaderCodeWindow({super.key});
 
   @override
-  State<QrReaderCodeWindow> createState() => _QrReaderCodeWindowState();
+  ConsumerState<QrReaderCodeWindow> createState() => _QrReaderCodeWindowState();
 }
 
-class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
+class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
   final MobileScannerController controller = MobileScannerController();
 
   String NOT_READ_QR_CODE = 'No se ha leido el código QR del producto';
   bool showBottomSheetForm = true;
+
+  String NOT_REGISTERED_ITEM = 'El producto no esta registrado';
+  String NOT_REGISTERED_ITEM_ADD =
+      'El producto no esta registrado, debe insertar su información';
+
+  String ALREADY_IN_SHOPPING_LIST = 'El producto ya esta en la lista de compra';
+  //"The product is already on the shopping list ";
 
   Widget _buildBarcodeOverlay() {
     return ValueListenableBuilder(
@@ -126,25 +137,36 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
                   final productJson = jsonDecode(data);
                   final Product qrReadProduct = Product.fromJson(productJson);
 
+                  Fluttertoast.showToast(
+                      msg: "IS VALID QR ITEM: ${data}",
+                      toastLength: Toast.LENGTH_SHORT);
+
                   //Find if exist in Data Base current Product
                   // - It was updated recientelly use the dada base information
-                  // - Update information set quantity in on
-                  // - Add in Current Buy list as firtst element
+                  final Product existProduct = products.firstWhere(
+                      (element) => element.title == qrReadProduct.title,
+                      orElse: () => Product(title: '', price: 0, rate: 0));
+
+                  if (existProduct.title.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: NOT_REGISTERED_ITEM,
+                        toastLength: Toast.LENGTH_SHORT);
+                  }
+
+                  findItemInShoppingList(qrReadProduct, data);
+
                   // - Go to POS Cashier page
-                  Fluttertoast.showToast(
-                      msg: "IS ALPHANUMERIC: ${qrReadProduct.title}",
-                      toastLength: Toast.LENGTH_SHORT);
                 } on FormatException catch (e) {
                   //Validate if only numbers about barcode
                   validateIfAlphanumericBarCode(data);
                 } catch (e) {
                   validateIfAlphanumericBarCode(data);
                 }
-              } else {
-                Future.delayed(const Duration(seconds: 10), () {
-                  showBottomSheetForm = true;
-                });
               }
+
+              Future.delayed(const Duration(seconds: 10), () {
+                showBottomSheetForm = true;
+              });
             },
           ),
           _buildBarcodeOverlay(),
@@ -177,13 +199,57 @@ class _QrReaderCodeWindowState extends State<QrReaderCodeWindow> {
 
       // - It was updated recientelly use the dada base information
       // - Update information set quantity in on
-      // - Add in Current Buy list as firtst element
-      // - Go to POS Cashier page
+      final Product existProduct = products.firstWhere(
+          (element) => element.barcode == data,
+          orElse: () => Product(title: '', price: 0, rate: 0));
+
+      if (existProduct.title.isEmpty) {
+        Fluttertoast.showToast(
+            msg: NOT_REGISTERED_ITEM_ADD, toastLength: Toast.LENGTH_SHORT);
+      } else {
+        findItemInShoppingList(existProduct, data);
+      }
     } else {
       Fluttertoast.showToast(
           msg: "Not alphanumeric: ${data} please SCAN a corret QR or Barcode",
           toastLength: Toast.LENGTH_SHORT);
       //Stay in page since user go to another option
+    }
+  }
+
+  void findItemInShoppingList(Product existProduct, String data) {
+    // - Add in Current Buy list as firtst element
+    if (cartItems.isEmpty) {
+      cartItems.add(CartItem(quantity: 1, product: existProduct));
+    } else {
+      CartItem existItemInCart;
+
+      try {
+        existItemInCart = cartItems.firstWhere(
+            (element) => element?.product?.title == existProduct.title,
+            orElse: () => CartItem(quantity: 1, product: null));
+
+        if (existProduct == null) {
+          existItemInCart = cartItems.firstWhere(
+              (element) => element.product?.barcode == data,
+              orElse: () => CartItem(quantity: 1, product: null));
+        }
+      } catch (e) {
+        existItemInCart = CartItem(quantity: 1, product: null);
+      }
+
+      if (existItemInCart.product != null) {
+        Fluttertoast.showToast(
+            msg: ALREADY_IN_SHOPPING_LIST, toastLength: Toast.LENGTH_SHORT);
+      } else {
+        // - Add in Current Buy list as firtst element
+        cartItems.add(CartItem(quantity: 1, product: existProduct));
+
+        // - Go to POS Cashier page
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("MainPoSScreen", 2);
+      }
     }
   }
 }

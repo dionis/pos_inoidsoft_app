@@ -22,9 +22,9 @@ class Product {
       required this.price,
       required this.rate,
       this.description = '',
-      this.image = '',
+      this.image = "assets/no-image.jpg",
       this.colors = const [Colors.white],
-      this.category = '',
+      this.category = 'Otros',
       this.barcode = ''});
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -129,7 +129,7 @@ final List<Product> products = [
       description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec massa sapien faucibus et molestie ac feugiat. In massa tempor nec feugiat nisl. Libero id faucibus nisl tincidunt.",
       image: "assets/shoes.jpg",
-      price: 23.33,
+      price: 2.53,
       colors: [
         Colors.pink.shade300,
       ],
@@ -141,7 +141,7 @@ final List<Product> products = [
       description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec massa sapien faucibus et molestie ac feugiat. In massa tempor nec feugiat nisl. Libero id faucibus nisl tincidunt.",
       image: "assets/pc.jpg",
-      price: 23.33,
+      price: 456.67,
       colors: [Colors.blueAccent.shade400, Colors.lightGreenAccent],
       category: "Personal care",
       rate: 1.8,
@@ -151,7 +151,7 @@ final List<Product> products = [
       description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec massa sapien faucibus et molestie ac feugiat. In massa tempor nec feugiat nisl. Libero id faucibus nisl tincidunt.",
       image: "assets/beauty.png",
-      price: 23.33,
+      price: 5.99,
       colors: [Colors.cyanAccent.shade700, Colors.orangeAccent.shade400],
       category: "Personal care",
       rate: 1.8,
