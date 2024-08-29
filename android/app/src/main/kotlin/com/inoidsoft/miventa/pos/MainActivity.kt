@@ -1,4 +1,4 @@
-package com.example.pos_inoidsoft_app
+package com.inoidsoft.miventa.pos
 
 import io.flutter.embedding.android.FlutterActivity
 

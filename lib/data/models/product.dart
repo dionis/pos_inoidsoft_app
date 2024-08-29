@@ -14,7 +14,7 @@ class Product {
   final double price;
   List<Color> colors = [Colors.white, Colors.black];
   final String category;
-  final double rate;
+  double rate;
   final String barcode;
 
   Product(

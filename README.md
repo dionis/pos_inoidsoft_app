@@ -13,7 +13,7 @@ OCR read image files.
     - SQlite data storage
     - OCR image lector
 
-##Bibliografy
+### Bibliografy
 - Scaner QR Code in FLutter
   -  [How to Scan QR Codes in Flutter](https://onlyflutter.com/how-to-scan-qr-codes-in-flutter/)
   -  [Flutter | Building a QR code scanner for Web, Android & iOS](https://medium.com/@robyeatesuk/flutter-building-a-qr-code-scanner-for-web-android-ios-267429dfe2ff)
@@ -51,3 +51,14 @@ OCR read image files.
 
 
    [showModalBottomSheet<T> function](https://api.flutter.dev/flutter/material/showModalBottomSheet.html) 
+
+- Pdf create report
+   
+   [PDF Generation in Flutter: A Step-by-Step Guide](https://medium.com/@akshatarora7/pdf-generation-in-flutter-a-step-by-step-guide-2af6a859aadf)
+
+
+   [Flutter PDF Document Generator Application ](https://flutterawesome.com/flutter-pdf-document-generator-application/)
+
+   [syncfusion_flutter_pdf](https://pub.dev/packages/syncfusion_flutter_pdf)
+
+   [PDF Generator in Flutter - How to create your next Invoice ](https://www.youtube.com/watch?v=6bYG-JwnoO4)

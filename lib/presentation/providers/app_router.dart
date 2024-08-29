@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/Product/product_screen.dart';
 import '../screens/add_item.dart';
-import '../screens/item_lists.dart';
+import '../screens/Items/item_lists.dart';
 import '../screens/Stadistics/stadistics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,11 +39,11 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
           path: '/itemLists',
           name: 'item_lists',
-          builder: (context, state) => const ItemLists()),
+          builder: (context, state) => ItemListsScreen()),
       GoRoute(
           path: '/itemAdd',
           name: 'item_add',
-          builder: (context, state) => const ItemAdd()),
+          builder: (context, state) => const ProductEditScreen()),
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
   );

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:pos_inoidsoft_app/constant.dart';
-import 'package:pos_inoidsoft_app/pos_screen.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/pos_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/Product/product_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/qr_code_reader_windows.dart';
-import '../../models/cart_item.dart';
+import 'Detail/crud_item.dart';
+import 'Qrcode_reader/qr_code_reader_windows.dart';
+import '../../data/models/cart_item.dart';
 import 'Home/HomeBoard.dart';
-import 'Items/Items.dart';
+import 'Items/item_lists.dart';
 import 'post_screen/post_main_screen.dart';
 
 class BottomNavBar extends ConsumerStatefulWidget {
@@ -24,16 +26,19 @@ class BottomNavBar extends ConsumerStatefulWidget {
 class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int currentIndexReference = 0;
   int shoppingCartSizeReference = 0;
-  List screens = const [
-    Homeboard(),
-    //FavoriteScreen(),
-    QrReaderCodeWindow(),
-    //PostScreen(),
-    MainPoSScreen(),
-    ItemListScreen(),
-    Stadistics(),
-    CalculatorScreen()
+  List screens = [
+    const Homeboard(),
+    const QrReaderCodeWindow(),
+    const MainPoSScreen(),
+    ItemListsScreen(),
+    const Stadistics(),
+    const CalculatorScreen(),
+    CrudItemScreen(
+      eventTitle: 'Add',
+    )
   ];
+
+  // const ProductEditScreen()
 
   @override
   Widget build(BuildContext context) {

@@ -7,18 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:pos_inoidsoft_app/models/product.dart';
+import 'package:pos_inoidsoft_app/data/models/product.dart';
 import 'package:string_validator/string_validator.dart';
-import '../models/cart_item.dart';
-import '../presentation/providers/config_state_variables.dart';
+import '../../../data/models/cart_item.dart';
+import '../../providers/config_state_variables.dart';
 import 'scanner_barcode_label.dart';
 import 'scanner_error_widget.dart';
 
 final _formKey = GlobalKey<FormState>();
-const String PRODUCT_NAME = "Nombre del producto";
-const String ERROR_TEXT_PRODUCT_NAME = "El nombre del producto es obligatorio";
-const String ADD_PRODUCT = "Añadir producto";
-const String PRODUCT_PRICE = "Precio del Producto";
 
 class QrReaderCodeWindow extends ConsumerStatefulWidget {
   const QrReaderCodeWindow({super.key});

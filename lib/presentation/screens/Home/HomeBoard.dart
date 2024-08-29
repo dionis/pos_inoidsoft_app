@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../constant.dart';
-import 'package:pos_inoidsoft_app/models/product.dart';
+import 'package:pos_inoidsoft_app/data/models/product.dart';
 import '../../../presentation/widgets/product_cart.dart';
 
 import '../../widgets/categories.dart';

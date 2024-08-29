@@ -6,7 +6,7 @@ part of 'config_state_variables.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentIndexHash() => r'f4d8b8d8eb0dc562742ce380a6b128e8befbbb3d';
+String _$currentIndexHash() => r'7fd72ff14cfc1949d6b4244dbc86885a8bc9f66e';
 
 /// See also [CurrentIndex].
 @ProviderFor(CurrentIndex)
