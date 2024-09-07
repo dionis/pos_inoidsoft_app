@@ -8,14 +8,14 @@ Product productFromJson(String str) => Product.fromJson(json.decode(str));
 String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
-  final String title;
-  final String description;
-  final String image;
-  final double price;
+  String title;
+  String description;
+  String image;
+  double price;
   List<Color> colors = [Colors.white, Colors.black];
-  final String category;
+  String category;
   double rate;
-  final String barcode;
+  String barcode;
 
   Product(
       {required this.title,
@@ -33,31 +33,20 @@ class Product {
         rate: json["rate"]?.toDouble(),
       );
 
-  ///Complet fromJson
-  // factory Product.fromJson(Map<String, dynamic> json) => Product(
-  // title: json["title"],
-  // price: json["price"],
-  // rate: json["rate"]?.toDouble(),
-  // description: json["description"],
-  // image: json["image"],
-  // colors: List<Color>.from(
-  //     json["colors"].map((x) => Color(StringToHex.toColor(x)))),
-  // category: json["category"]);
-
-  //Complete toJson
-  // Map<String, dynamic> toJson() => {
-  //       "title": title,
-  //       "description": description,
-  //       "image": image,
-  //       "price": price,
-  //       "colors": List<dynamic>.from(colors.map((x) => x.toString())),
-  //       "category": category,
-  //       "rate": rate,
-  //     };
+  get barCode => null;
 
   Map<String, dynamic> toJson() =>
       {"title": title, "price": price, "rate": rate};
 }
+
+/**
+ *   
+ *    Barcode examples with product images
+ *      
+*        Crema Anal :080196668420
+*        Desodorante Whisky: 3509163891083
+ *
+ */
 
 final List<Product> products = [
   Product(

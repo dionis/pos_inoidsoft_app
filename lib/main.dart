@@ -18,7 +18,7 @@ class MyApp extends ConsumerWidget {
     final appRouter = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'miVentaPOS',
       theme: ThemeData(
         // This is the theme of your application.
         //

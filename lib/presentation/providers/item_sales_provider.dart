@@ -10,9 +10,16 @@ part 'item_sales_provider.g.dart';
 
 const uuid = Uuid();
 
-enum FilterType { all, completed, pending }
+enum FilterType {
+  all,
+  completed,
+  pending,
+  updateItemPos,
+  updateItemList,
+  editItem
+}
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ItemSalesCurrentFilter extends _$ItemSalesCurrentFilter {
   @override
   FilterType build() => FilterType.all;
@@ -37,71 +44,46 @@ class SelectedProduct extends _$SelectedProduct {
   void setProduct(Product newProduct) {
     state = newProduct;
   }
+
+  bool updateBarCode(String barCode) {
+    if (state.barCode != barCode) {
+      state.barcode = barCode;
+      return true;
+    }
+    return false;
+  }
+
+  bool addColor(Color newColor) {
+    state.colors.add(newColor);
+    return true;
+  }
+
+  bool removeColor(Color newColor) {
+    if (state.colors.remove(newColor)) {
+      return true;
+    }
+    return false;
+  }
+
+  set categories(String newCategory) {
+    state.category = newCategory;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class SelectedProductIndex extends _$SelectedProductIndex {
+  @override
+  int build() => 0;
+
+  updateEditSelectedItem(int index) {
+    state = index >= 0 ? index : 0;
+  }
 }
 
 @Riverpod(keepAlive: true)
 class ItemSales extends _$ItemSales {
   @override
   List<Product> build() {
-    // return [
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    //   Product(
-    //       title: RandomNames(Zone.spain).fullName(),
-    //       description: RandomNames(Zone.spain).fullName(),
-    //       image: '',
-    //       price: Random(345).nextDouble(),
-    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
-    //       category: RandomNames(Zone.spain).fullName(),
-    //       rate: Random(345).nextDouble()),
-    // ];
-
     return [
       Product(
         title: "Wireless Headphones",

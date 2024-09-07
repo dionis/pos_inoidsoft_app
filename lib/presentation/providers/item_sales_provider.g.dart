@@ -7,12 +7,12 @@ part of 'item_sales_provider.dart';
 // **************************************************************************
 
 String _$itemSalesCurrentFilterHash() =>
-    r'1c5dfa5f1c09ede22bd0ff911f8cbada9d9a5804';
+    r'a462667ecf286ab2c415c98ed5ab667324c29b03';
 
 /// See also [ItemSalesCurrentFilter].
 @ProviderFor(ItemSalesCurrentFilter)
 final itemSalesCurrentFilterProvider =
-    AutoDisposeNotifierProvider<ItemSalesCurrentFilter, FilterType>.internal(
+    NotifierProvider<ItemSalesCurrentFilter, FilterType>.internal(
   ItemSalesCurrentFilter.new,
   name: r'itemSalesCurrentFilterProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,8 +22,8 @@ final itemSalesCurrentFilterProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ItemSalesCurrentFilter = AutoDisposeNotifier<FilterType>;
-String _$selectedProductHash() => r'02854d8e49d107b25ceba3986ded19713ddaa561';
+typedef _$ItemSalesCurrentFilter = Notifier<FilterType>;
+String _$selectedProductHash() => r'0914ed829bc8a9ca57c806e6d00063253ccd1cd3';
 
 /// See also [SelectedProduct].
 @ProviderFor(SelectedProduct)
@@ -39,6 +39,23 @@ final selectedProductProvider =
 );
 
 typedef _$SelectedProduct = Notifier<Product>;
+String _$selectedProductIndexHash() =>
+    r'37104b60a0bb2b2799a16843d05b8c151746b619';
+
+/// See also [SelectedProductIndex].
+@ProviderFor(SelectedProductIndex)
+final selectedProductIndexProvider =
+    NotifierProvider<SelectedProductIndex, int>.internal(
+  SelectedProductIndex.new,
+  name: r'selectedProductIndexProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$selectedProductIndexHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SelectedProductIndex = Notifier<int>;
 String _$itemSalesHash() => r'1c95391bf53982a11cfdfa57530cd0dd6a86f9e6';
 
 /// See also [ItemSales].

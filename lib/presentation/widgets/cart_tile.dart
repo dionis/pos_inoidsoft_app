@@ -39,189 +39,192 @@ class CarTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      children: [
-        Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              children: [
-                Container(
-                  height: 85,
-                  width: 85,
-                  decoration: BoxDecoration(
-                      color: kcontentColor,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Image.asset(validateItemImage(item.product)),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      (item.product?.title ?? "").length < 15
-                          ? item.product?.title ?? ""
-                          : (item.product?.title ?? "").substring(0, 15),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      item.product?.category ?? "",
-                      style: const TextStyle(
+    return Padding(
+      padding: const EdgeInsets.only(top: 3, bottom: 3),
+      child: Stack(
+        children: [
+          Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                children: [
+                  Container(
+                    height: 85,
+                    width: 85,
+                    decoration: BoxDecoration(
+                        color: kcontentColor,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Image.asset(validateItemImage(item.product)),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (item.product?.title ?? "").length < 15
+                            ? item.product?.title ?? ""
+                            : (item.product?.title ?? "").substring(0, 15),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        item.product?.category ?? "",
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(189, 189, 189, 1)),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "\$${item.product?.price}",
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(189, 189, 189, 1)),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "\$${item.product?.price}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            )),
-        Positioned(
-            top: 5,
-            right: 5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: kcontentColor,
-                      border: Border.all(color: Colors.grey, width: 2),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: onRemove,
-                        icon: const Icon(
-                          Ionicons.remove_outline,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 2),
-                      Text("${item.quantity}"),
-                      const SizedBox(width: 2),
-                      IconButton(
-                        onPressed: onAdd,
-                        icon: const Icon(
-                          Ionicons.add_outline,
-                          color: Colors.black,
-                          size: 20,
                         ),
                       ),
                     ],
+                  )
+                ],
+              )),
+          Positioned(
+              top: 5,
+              right: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: kcontentColor,
+                        border: Border.all(color: Colors.grey, width: 2),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: onRemove,
+                          icon: const Icon(
+                            Ionicons.remove_outline,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 2),
+                        Text("${item.quantity}"),
+                        const SizedBox(width: 2),
+                        IconButton(
+                          onPressed: onAdd,
+                          icon: const Icon(
+                            Ionicons.add_outline,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext dialogContext) {
-                                oldDialogContextTile = dialogContext;
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext dialogContext) {
+                                  oldDialogContextTile = dialogContext;
 
-                                return ChangeCurremcyDialog(
-                                  title: EDIT_ITEM_TITLE,
-                                  content: EDIT_ITEM_MESSAGE,
-                                  actions: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 110,
-                                          child: FloatingActionButton(
-                                            onPressed: onDismissTile,
-                                            child: Text(CANCEL_BUTTON_LABEL),
+                                  return ChangeCurremcyDialog(
+                                    title: EDIT_ITEM_TITLE,
+                                    content: EDIT_ITEM_MESSAGE,
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            height: 30,
+                                            width: 110,
+                                            child: FloatingActionButton(
+                                              onPressed: onDismissTile,
+                                              child: Text(CANCEL_BUTTON_LABEL),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          height: 30,
-                                          width: 110,
-                                          child: FloatingActionButton(
-                                            onPressed: onEditTile,
-                                            child: Text(UPDATE_BUTTON_LABEL),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        icon: const Icon(
-                          Ionicons.pencil_sharp,
-                          color: Colors.blueAccent,
-                          size: 25,
+                                          Container(
+                                            height: 30,
+                                            width: 110,
+                                            child: FloatingActionButton(
+                                              onPressed: onEditTile,
+                                              child: Text(UPDATE_BUTTON_LABEL),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          icon: const Icon(
+                            Ionicons.pencil_sharp,
+                            color: Colors.blueAccent,
+                            size: 25,
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext dialogContext) {
-                                oldDialogContextTile = dialogContext;
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext dialogContext) {
+                                  oldDialogContextTile = dialogContext;
 
-                                return ChangeCurremcyDialog(
-                                  title: DELETE_ITEM_TITLE,
-                                  content: DELETE_ITEM_MESSAGE,
-                                  actions: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 110,
-                                          child: FloatingActionButton(
-                                            onPressed: onDismissTile,
-                                            child: Text(CANCEL_BUTTON_LABEL),
+                                  return ChangeCurremcyDialog(
+                                    title: DELETE_ITEM_TITLE,
+                                    content: DELETE_ITEM_MESSAGE,
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            height: 30,
+                                            width: 110,
+                                            child: FloatingActionButton(
+                                              onPressed: onDismissTile,
+                                              child: Text(CANCEL_BUTTON_LABEL),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          height: 30,
-                                          width: 110,
-                                          child: FloatingActionButton(
-                                            onPressed: onAcceptDeleteTile,
-                                            child: Text(DELETE_BUTTON_LABEL),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        icon: const Icon(
-                          Ionicons.trash_outline,
-                          color: Colors.red,
-                          size: 20,
+                                          Container(
+                                            height: 30,
+                                            width: 110,
+                                            child: FloatingActionButton(
+                                              onPressed: onAcceptDeleteTile,
+                                              child: Text(DELETE_BUTTON_LABEL),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          icon: const Icon(
+                            Ionicons.trash_outline,
+                            color: Colors.red,
+                            size: 20,
+                          ),
                         ),
-                      ),
-                    ])
-              ],
-            ))
-      ],
+                      ])
+                ],
+              ))
+        ],
+      ),
     );
   }
 

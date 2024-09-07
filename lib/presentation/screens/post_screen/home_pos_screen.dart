@@ -5,14 +5,16 @@ import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/data/models/product.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/chage_currency.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/payment_method.dart';
+import 'package:string_validator/string_validator.dart';
 
-import 'Qrcode_reader/qr_code_reader_windows.dart';
-import '../../data/models/cart_item.dart';
-import '../providers/config_state_variables.dart';
-import '../providers/item_sales_provider.dart';
-import '../widgets/cart_tile.dart';
+import '../Qrcode_reader/qr_code_reader_windows.dart';
+import '../../../data/models/cart_item.dart';
+import '../../providers/config_state_variables.dart';
+import '../../providers/item_sales_provider.dart';
+import '../../widgets/cart_tile.dart';
 
 class HomePosScreen extends ConsumerStatefulWidget {
   const HomePosScreen({super.key});
@@ -31,7 +33,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   void initState() {
     super.initState();
     setState(() {
-      foundItems = cartItems.reversed.toList();
+      // foundItems = cartItems.reversed.toList();
     });
   }
 
@@ -60,6 +62,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
             body: Column(children: [
       Container(
         height: MediaQuery.of(context).size.height / 1.80,
+        color: Colors.amber.shade50,
         child: resultWidget(),
       ),
       Expanded(child: buttomWidget()),
@@ -67,43 +70,38 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   }
 
   Widget resultWidget() {
+    foundItems = ref.watch(itemsSalesCartProvider);
+
     calculateItems();
 
-    return Container(
-      color: Colors.amber.shade50,
-      // child: SingleChildScrollView(
-      child: Column(
-        // mainAxisSize: MainAxisSize.min,
-        children: [
-          //  Expanded(
-          Flexible(
-              flex: 1,
-              child: Container(
-                child: TextField(
-                  onChanged: (value) => _onSearchInItems(value),
-                  decoration: InputDecoration(
-                      filled: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey.shade500,
-                      ),
-                      fillColor: const Color.fromRGBO(228, 224, 224, 1),
-                      contentPadding: const EdgeInsets.all(0),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide.none),
-                      hintStyle:
-                          TextStyle(fontSize: 14, color: Colors.grey.shade500),
-                      hintText: SEARCH_PRODUCT),
+    return Column(
+      // mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 5, bottom: 10),
+          child: TextField(
+            onChanged: (value) => _onSearchInItems(value),
+            decoration: InputDecoration(
+                filled: true,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey.shade500,
                 ),
-              )),
-          // child:
-          Flexible(
-            flex: 4,
+                fillColor: const Color.fromRGBO(228, 224, 224, 1),
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide.none),
+                hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                hintText: SEARCH_PRODUCT),
+          ),
+        ),
+        Expanded(
+            flex: 1,
             child: foundItems.isNotEmpty
-                ? ListView.separated(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(20),
+                ? ListView.builder(
+                    padding:
+                        const EdgeInsets.only(left: 5, right: 5, bottom: 0),
                     itemBuilder: (context, index) => CarTile(
                       item: foundItems[index],
                       onRemove: () {
@@ -129,17 +127,32 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                       },
                       onEditItem: () {
                         final item = foundItems[index]?.product ??
-                            Product(title: '', price: 0, rate: 0);
+                            Product(title: '', price: 0, rate: 1);
+
+                        //Update the current quantity in cart
+                        item.rate = (foundItems[index]!.quantity ?? 0) * 1.0;
+
                         ref
                             .read(selectedProductProvider.notifier)
                             .setProduct(item);
                         ref
+                            .read(itemSalesCurrentFilterProvider.notifier)
+                            .changeCurrentFilter(FilterType.updateItemPos);
+                        ref
                             .read(currentIndexProvider.notifier)
                             .updateCurrentMainWidget("ProductEditScreen", 6);
+
+                        ref
+                            .read(selectedInSalesCartProductIndexProvider
+                                .notifier)
+                            .updateEditSelectedItem(index);
+
+                        ref
+                            .read(selectedInSalesCartProductProvider.notifier)
+                            .setProduct(foundItems[index].product ??
+                                Product(title: "", price: 0.0, rate: 0.0));
                       },
                     ),
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 5),
                     itemCount: foundItems.length,
                   )
                 : Center(
@@ -149,31 +162,26 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.normal)),
-                  ),
-          ),
-          //),
-          const SizedBox(height: 5),
-          Flexible(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text("\$ ",
-                      style:
-                          TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.end,
-                      textDirection: TextDirection.rtl),
-                  Text(
-                    resultOutput,
-                    style: const TextStyle(
-                        fontSize: 48, fontWeight: FontWeight.bold),
+                  )),
+        Padding(
+            padding: const EdgeInsets.only(top: 2, bottom: 3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text("\$ ",
+                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.end,
-                    textDirection: TextDirection.rtl,
-                  ),
-                ],
-              )),
-        ],
-      ),
+                    textDirection: TextDirection.rtl),
+                Text(
+                  resultOutput,
+                  style: const TextStyle(
+                      fontSize: 48, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.end,
+                  textDirection: TextDirection.rtl,
+                ),
+              ],
+            )),
+      ],
     );
   }
 
@@ -241,9 +249,11 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                 borderRadius: BorderRadius.circular(20),
                 color: getColor(text),
                 image: getImageButtonDecoration(text),
+                border: Border.all(color: Colors.blueAccent),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color:
+                          const Color.fromARGB(255, 4, 0, 0).withOpacity(0.1),
                       blurRadius: 1,
                       spreadRadius: 1)
                 ]),
@@ -257,6 +267,9 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
 
   handleButtonPress(String text) {
     //Continue on https://youtu.be/Yc9U62-Tr-0?list=PLvG2mD7Ba5Sw0TKZwIW_7nNbihTRc8VN4&t=948
+    ref
+        .read(itemSalesCurrentFilterProvider.notifier)
+        .changeCurrentFilter(FilterType.all);
 
     switch (text) {
       case 'AC':
@@ -290,6 +303,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         return;
       case '/':
         //Item list
+
         ref
             .read(currentIndexProvider.notifier)
             .updateCurrentMainWidget("ItemListScreen", 3);

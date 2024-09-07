@@ -62,3 +62,12 @@ OCR read image files.
    [syncfusion_flutter_pdf](https://pub.dev/packages/syncfusion_flutter_pdf)
 
    [PDF Generator in Flutter - How to create your next Invoice ](https://www.youtube.com/watch?v=6bYG-JwnoO4)
+
+
+## Flutter pdf build report 
+
+- [How to Create PDF/A Standard Files in Flutter](https://www.syncfusion.com/blogs/post/how-to-create-pdf-a-standard-files-in-flutter)
+
+- [Flutter PDF Document Generator Application ](https://flutterawesome.com/flutter-pdf-document-generator-application/)
+
+- [Flutter PDF Document Generator Application](https://github.com/AmirBayat0/Flutter-PDF-Generator)

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:pos_inoidsoft_app/constant.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/pos_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Product/product_screen.dart';
@@ -9,7 +8,8 @@ import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dar
 import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'Detail/crud_item.dart';
+import '../providers/item_sales_provider.dart';
+import 'Detail/edit_item.dart';
 import 'Qrcode_reader/qr_code_reader_windows.dart';
 import '../../data/models/cart_item.dart';
 import 'Home/HomeBoard.dart';
@@ -26,6 +26,7 @@ class BottomNavBar extends ConsumerStatefulWidget {
 class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int currentIndexReference = 0;
   int shoppingCartSizeReference = 0;
+  int currentProductIndexReference = 0;
   List screens = [
     const Homeboard(),
     const QrReaderCodeWindow(),
@@ -33,9 +34,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     ItemListsScreen(),
     const Stadistics(),
     const CalculatorScreen(),
-    CrudItemScreen(
-      eventTitle: 'Add',
-    )
+    CrudItemScreen(eventTitle: 'Add')
   ];
 
   // const ProductEditScreen()
@@ -79,7 +78,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         onPressed: () {
           setState(() {
             //currentIndexReference = 2;
-
+            ref
+                .read(itemSalesCurrentFilterProvider.notifier)
+                .changeCurrentFilter(FilterType.all);
             ref
                 .read(currentIndexProvider.notifier)
                 .updateCurrentMainWidget("MainPoSScreen", 2);
@@ -110,6 +111,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                   setState(() {
                     //currentIndexReference = 0;
                     ref
+                        .read(itemSalesCurrentFilterProvider.notifier)
+                        .changeCurrentFilter(FilterType.all);
+                    ref
                         .read(currentIndexProvider.notifier)
                         .updateCurrentMainWidget("Homeboard", 0);
                   });
@@ -125,7 +129,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 onPressed: () {
                   setState(() {
                     //currentIndexReference = 1;
-
+                    ref
+                        .read(itemSalesCurrentFilterProvider.notifier)
+                        .changeCurrentFilter(FilterType.all);
                     ref
                         .read(currentIndexProvider.notifier)
                         .updateCurrentMainWidget("QrReaderCodeWindow", 1);
@@ -145,7 +151,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 onPressed: () {
                   setState(() {
                     //currentIndexReference = 2;
-
+                    ref
+                        .read(itemSalesCurrentFilterProvider.notifier)
+                        .changeCurrentFilter(FilterType.all);
                     ref
                         .read(currentIndexProvider.notifier)
                         .updateCurrentMainWidget("MainPoSScreen", 2);
@@ -163,6 +171,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                   setState(() {
                     //currentIndexReference = 3;
                     ref
+                        .read(itemSalesCurrentFilterProvider.notifier)
+                        .changeCurrentFilter(FilterType.all);
+                    ref
                         .read(currentIndexProvider.notifier)
                         .updateCurrentMainWidget("ItemListScreen", 3);
                   });
@@ -178,6 +189,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 onPressed: () {
                   setState(() {
                     //currentIndexReference = 4;
+                    ref
+                        .read(itemSalesCurrentFilterProvider.notifier)
+                        .changeCurrentFilter(FilterType.all);
                     ref
                         .read(currentIndexProvider.notifier)
                         .updateCurrentMainWidget("Stadistics", 4);
@@ -222,6 +236,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               padding: const EdgeInsets.all(20)),
           onPressed: () {
             setState(() {
+              ref
+                  .read(itemSalesCurrentFilterProvider.notifier)
+                  .changeCurrentFilter(FilterType.all);
               ref
                   .read(currentIndexProvider.notifier)
                   .updateCurrentMainWidget("MainPoSScreen", 2);

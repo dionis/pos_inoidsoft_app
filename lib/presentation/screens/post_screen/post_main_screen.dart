@@ -4,7 +4,7 @@ import "package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_scr
 
 import "../Qrcode_reader/qr_code_reader_windows.dart";
 import "../../widgets/custom_button_pos.dart";
-import "../home_pos_screen.dart";
+import "home_pos_screen.dart";
 
 class MainPoSScreen extends StatefulWidget {
   const MainPoSScreen({super.key});
