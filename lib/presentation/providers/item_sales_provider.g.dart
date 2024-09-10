@@ -56,7 +56,7 @@ final selectedProductIndexProvider =
 );
 
 typedef _$SelectedProductIndex = Notifier<int>;
-String _$itemSalesHash() => r'1c95391bf53982a11cfdfa57530cd0dd6a86f9e6';
+String _$itemSalesHash() => r'5593d4861452b0f7a5d1d2c28e238e8d5fcd8635';
 
 /// See also [ItemSales].
 @ProviderFor(ItemSales)

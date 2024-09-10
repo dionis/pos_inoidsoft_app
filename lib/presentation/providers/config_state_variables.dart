@@ -43,9 +43,7 @@ class CurrentIndex extends _$CurrentIndex {
 @Riverpod(keepAlive: true)
 class ShoppinCartSize extends _$ShoppinCartSize {
   @override
-  int build() {
-    return cartItems.length;
-  }
+  int build() => 0;
 
   updateShoppingCartSize(int size) {
     state = size;

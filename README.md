@@ -51,6 +51,17 @@ OCR read image files.
 
 
    [showModalBottomSheet<T> function](https://api.flutter.dev/flutter/material/showModalBottomSheet.html) 
+- Create QR in Flutter
+ 
+    [Generating QR-Code in a Flutter App](https://medium.com/podiihq/generating-qr-code-in-a-flutter-app-50de15e39830)
+
+
+    [qr_flutter 4.1.0](https://pub.dev/packages/qr_flutter)
+
+    [Export your widget to image with flutter](https://medium.com/flutter-community/export-your-widget-to-image-with-flutter-dc7ecfa6bafb)
+
+    [How to do Save/Share QR code as an image or PDF on Action ?](https://community.flutterflow.io/ask-the-community/post/how-to-do-save-share-qr-code-as-an-image-or-pdf-on-action-pdcS7xLJqdqFarN)
+
 
 - Pdf create report
    
@@ -71,3 +82,18 @@ OCR read image files.
 - [Flutter PDF Document Generator Application ](https://flutterawesome.com/flutter-pdf-document-generator-application/)
 
 - [Flutter PDF Document Generator Application](https://github.com/AmirBayat0/Flutter-PDF-Generator)
+
+
+## Flutter Web Scrapy
+
+- [Web Scraping in Flutter](https://www.geeksforgeeks.org/web-scraping-in-flutter/)
+
+- [Flutter web scraping in practice](https://medium.com/@antonio.tioypedro1234/flutter-web-scraping-in-practice-c4c4a861a223)
+
+- [web_scraper 0.1.4](https://pub.dev/packages/web_scraper/versions)
+
+- [Scrapy, a fast high-level web crawling & scraping framework for dart and Flutter](https://github.com/sachaarbonel/scrapy.dart)
+
+- [Flutter Web Scraping | ALL Tutorials](https://www.youtube.com/watch?v=wW9T5lP3DoY)
+
+- [scrapy](https://fluttergems.dev/packages/scrapy/)

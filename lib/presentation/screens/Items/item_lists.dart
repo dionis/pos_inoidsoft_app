@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 
 import '../../../data/models/cart_item.dart';
 import '../../../data/models/product.dart';
 import '../../providers/config_state_variables.dart';
 import '../../widgets/cart_tile.dart';
+import '../../widgets/cart_tile_store.dart';
 import '../../widgets/categories.dart';
+import '../../widgets/chage_currency.dart';
 import '../../widgets/search_bar.dart';
 
 class ItemListsScreen extends ConsumerWidget {
   late BuildContext oldDialogContext;
+
+  String DIALOG_TITLE_ADD_TO_CART = 'Añadir producto';
+
+  String DIALOG_MESSAGE_ADD_TO_CART =
+      'El producto ya ha sido agregado al carrito';
 
   ItemListsScreen({super.key});
 
@@ -43,22 +52,22 @@ class ItemListsScreen extends ConsumerWidget {
               final cartItemShow = CartItem(
                   quantity: itemProduct.rate.toInt(), product: itemProduct);
 
-              return CarTile(
+              return CarTileStore(
                 item: cartItemShow,
                 onRemove: () {
-                  if (cartItemShow.quantity != 1) {
-                    itemProduct.rate = (cartItemShow.quantity--).toDouble();
-                  }
+                  // if (cartItemShow.quantity != 1) {
+                  //   itemProduct.rate = (cartItemShow.quantity--).toDouble();
+                  // }
 
-                  ref
-                      .read(itemSalesProvider.notifier)
-                      .updateProduct(itemProduct, index);
+                  // ref
+                  //     .read(itemSalesProvider.notifier)
+                  //     .updateProduct(itemProduct, index);
                 },
                 onAdd: () {
-                  itemProduct.rate = (cartItemShow.quantity++).toDouble();
-                  ref
-                      .read(itemSalesProvider.notifier)
-                      .updateProduct(itemProduct, index);
+                  // itemProduct.rate = (cartItemShow.quantity++).toDouble();
+                  // ref
+                  //     .read(itemSalesProvider.notifier)
+                  //     .updateProduct(itemProduct, index);
                 },
                 onDeleteItem: () {
                   ref.read(itemSalesProvider.notifier).deleteProduct(index);
@@ -77,6 +86,33 @@ class ItemListsScreen extends ConsumerWidget {
                   ref
                       .read(currentIndexProvider.notifier)
                       .updateCurrentMainWidget("ProductEditScreen", 6);
+                },
+                onAddInCartSales: () {
+                  CartItem productToCart = CartItem(
+                      quantity: itemProduct.rate.toInt(), product: itemProduct);
+
+                  productToCart.id = cartItemShow.id;
+
+                  bool existProduct = ref
+                      .read(itemsSalesCartProvider.notifier)
+                      .createProduct(productToCart);
+
+                  if (existProduct) {
+                    Fluttertoast.showToast(
+                        msg: DIALOG_MESSAGE_ADD_TO_CART,
+                        toastLength: Toast.LENGTH_SHORT);
+                    // showDialog(
+                    //     context: context,
+                    //     barrierDismissible: false,
+                    //     builder: (BuildContext dialogContext) {
+                    //       oldDialogContext = dialogContext;
+
+                    //       return ChangeCurremcyDialog(
+                    //           title: DIALOG_TITLE_ADD_TO_CART,
+                    //           content: DIALOG_MESSAGE_ADD_TO_CART,
+                    //           actions: const <Widget>[]);
+                    //     });
+                  }
                 },
               );
             },

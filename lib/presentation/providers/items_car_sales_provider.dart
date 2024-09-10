@@ -122,20 +122,26 @@ class ItemsSalesCart extends _$ItemsSalesCart {
     //       rate: Random(345).nextDouble()),
     // ];
 
-    return [
-      // CartItem(quantity: 2, product: products[0]),
-      CartItem(quantity: 1, product: products[1]),
-      CartItem(quantity: 15, product: products[2]),
-      CartItem(quantity: 2, product: products[3]),
-      CartItem(quantity: 7, product: products[4]),
-      // CartItem(quantity: 1, product: products[5]),
-      // CartItem(quantity: 1, product: products[6]),
-      CartItem(quantity: 1, product: products[7]),
-    ];
+    return [];
+
+    //  // CartItem(quantity: 2, product: products[0]),
+    //   CartItem(quantity: 1, product: products[1]),
+    //   CartItem(quantity: 15, product: products[2]),
+    //   CartItem(quantity: 2, product: products[3]),
+    //   CartItem(quantity: 7, product: products[4]),
+    //   // CartItem(quantity: 1, product: products[5]),
+    //   // CartItem(quantity: 1, product: products[6]),
+    //   CartItem(quantity: 1, product: products[7]),
   }
 
-  void createProduct(CartItem product) {
-    state = [...state, product];
+  bool createProduct(CartItem product) {
+    final exitsProduct = state.any((element) => element.id == product.id);
+
+    if (!exitsProduct) {
+      state = [...state, product];
+    }
+
+    return exitsProduct;
   }
 
   void updateProduct(Product product, int index) {

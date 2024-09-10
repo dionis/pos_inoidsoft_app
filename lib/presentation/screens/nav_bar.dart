@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:pos_inoidsoft_app/constant.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Product/product_screen.dart';
@@ -27,6 +28,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int currentIndexReference = 0;
   int shoppingCartSizeReference = 0;
   int currentProductIndexReference = 0;
+  List<CartItem> cartItemsList = [];
+
   List screens = [
     const Homeboard(),
     const QrReaderCodeWindow(),
@@ -208,12 +211,14 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         ),
       ),
       body: screens[currentIndexReference],
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(),
     );
   }
 
   Widget _shoopingCartBadget() {
     shoppingCartSizeReference = ref.watch(shoppinCartSizeProvider);
+
+    cartItemsList = ref.watch(itemsSalesCartProvider);
 
     return badges.Badge(
       position: badges.BadgePosition.topEnd(top: 0, end: 3),
@@ -221,7 +226,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
           // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
           // curve: Curves.easeInCubic,
           ),
-      showBadge: cartItems.isNotEmpty,
+      showBadge: cartItemsList.isNotEmpty,
       badgeStyle: const badges.BadgeStyle(
         badgeColor: Colors.red,
       ),

@@ -1,10 +1,14 @@
+import 'package:uuid/uuid.dart';
+
 import 'product.dart';
 
 class CartItem {
+  String id;
   int quantity;
   Product? product;
 
-  CartItem({required this.quantity, required this.product});
+  CartItem({required this.quantity, required this.product})
+      : id = const Uuid().v1();
 }
 
 List<CartItem> cartItems = [

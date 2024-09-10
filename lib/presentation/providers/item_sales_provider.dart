@@ -82,6 +82,21 @@ class SelectedProductIndex extends _$SelectedProductIndex {
 
 @Riverpod(keepAlive: true)
 class ItemSales extends _$ItemSales {
+  //Test id
+  //1- {
+  //    id: f5f34e75-6d71-11ef-bcf5-61ea3649fb87,
+  //    title: Desodorant Bambu,
+  //    price: 2.53,
+  //    rate: 0.8
+  // }
+
+  //2- {
+  //    id: ef490702-6d70-11ef-8a86-a3583e4301a2,
+  //    title: Dresses,
+  //    price: 125.33,
+  //    rate:
+  //    2.0
+  //}
   @override
   List<Product> build() {
     return [
@@ -184,8 +199,14 @@ class ItemSales extends _$ItemSales {
     ];
   }
 
-  void createProduct(Product product) {
-    state = [...state, product];
+  bool createProduct(Product product) {
+    final exitsProduct = state.any((element) => element.id == product.id);
+
+    if (!exitsProduct) {
+      state = [...state, product];
+    }
+
+    return exitsProduct;
   }
 
   void updateProduct(Product product, int index) {

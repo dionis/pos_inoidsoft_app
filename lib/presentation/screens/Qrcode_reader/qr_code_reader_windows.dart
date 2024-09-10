@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:pos_inoidsoft_app/data/models/product.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:string_validator/string_validator.dart';
 import '../../../data/models/cart_item.dart';
 import '../../providers/config_state_variables.dart';
@@ -39,6 +40,9 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
   bool findItemSomeSystemList = false;
 
   bool isItemAlphanumeric = false;
+
+  List<CartItem> cartItemList = [];
+  List<Product> storeItemList = [];
   //"The product is already on the shopping list ";
 
   Widget _buildBarcodeOverlay() {
@@ -110,6 +114,9 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
       height: 200,
     );
 
+    cartItemList = ref.watch(itemsSalesCartProvider);
+    storeItemList = ref.watch(itemSalesProvider);
+
     return Scaffold(
       //appBar: AppBar(title: const Text('With Scan window')),
       backgroundColor: Colors.black,
@@ -146,8 +153,9 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
 
                     //Find if exist in Data Base current Product
                     // - It was updated recientelly use the dada base information
-                    final Product existProduct = products.firstWhere(
-                        (element) => element.title == qrReadProduct.title,
+                    final Product existProduct = storeItemList.firstWhere(
+                        (element) => (element.title == qrReadProduct.title &&
+                            element.id == qrReadProduct.id),
                         orElse: () => Product(title: '', price: 0, rate: 0));
 
                     if (existProduct.title.isEmpty) {
@@ -218,7 +226,7 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
 
       // - It was updated recientelly use the dada base information
       // - Update information set quantity in on
-      final Product existProduct = products.firstWhere(
+      final Product existProduct = storeItemList.firstWhere(
           (element) => element.barcode == data,
           orElse: () => Product(title: '', price: 0, rate: 0));
 
@@ -241,19 +249,27 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
 
   void findItemInShoppingList(Product existProduct, String data) {
     // - Add in Current Buy list as firtst element
-    if (cartItems.isEmpty) {
-      cartItems.add(CartItem(quantity: 1, product: existProduct));
+    if (cartItemList.isEmpty && Null != existProduct) {
+      //cartItemList.add(CartItem(quantity: 1, product: existProduct));
+      ref
+          .read(itemsSalesCartProvider.notifier)
+          .createProduct(CartItem(quantity: 1, product: existProduct));
+
+      ref
+          .read(shoppinCartSizeProvider.notifier)
+          .updateShoppingCartSize(cartItemList.length + 1);
     } else {
       CartItem existItemInCart;
 
       try {
-        existItemInCart = cartItems.firstWhere(
-            (element) => element?.product?.title == existProduct.title,
-            orElse: () => CartItem(quantity: 1, product: null));
-
         if (existProduct == null) {
-          existItemInCart = cartItems.firstWhere(
+          existItemInCart = cartItemList.firstWhere(
               (element) => element.product?.barcode == data,
+              orElse: () => CartItem(quantity: 1, product: null));
+        } else {
+          existItemInCart = cartItemList.firstWhere(
+              (element) => (element?.product?.title == existProduct.title &&
+                  element?.product?.id == existProduct.id),
               orElse: () => CartItem(quantity: 1, product: null));
         }
       } catch (e) {
@@ -265,7 +281,13 @@ class _QrReaderCodeWindowState extends ConsumerState<QrReaderCodeWindow> {
             msg: ALREADY_IN_SHOPPING_LIST, toastLength: Toast.LENGTH_SHORT);
       } else {
         // - Add in Current Buy list as firtst element
-        cartItems.add(CartItem(quantity: 1, product: existProduct));
+        //cartItems.add(CartItem(quantity: 1, product: existProduct));
+        ref
+            .read(itemsSalesCartProvider.notifier)
+            .createProduct(CartItem(quantity: 1, product: existProduct));
+        ref
+            .read(shoppinCartSizeProvider.notifier)
+            .updateShoppingCartSize(cartItemList.length + 1);
         findItemSomeSystemList = true;
       }
     }

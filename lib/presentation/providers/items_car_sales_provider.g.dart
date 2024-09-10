@@ -40,7 +40,7 @@ final selectedInSalesCartProductIndexProvider =
 );
 
 typedef _$SelectedInSalesCartProductIndex = Notifier<int>;
-String _$itemsSalesCartHash() => r'4f06211566fe78ac92c76b0579a55ab156d96aa2';
+String _$itemsSalesCartHash() => r'fc9ced02a0f0280fcb7a7dac3d7e84bf63eb3dac';
 
 /// See also [ItemsSalesCart].
 @ProviderFor(ItemsSalesCart)

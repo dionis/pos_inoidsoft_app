@@ -3,7 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomDrawer extends ConsumerWidget {
-  const CustomDrawer({super.key});
+  String MY_DETAILS = 'Mis Datos';
+
+  String MY_BUSSINES_DETAILS = 'Datos de mi negocio';
+
+  String ECHANGE_RATE_DATAILS = 'Tasa de cambio';
+
+  String CLOSE_DRAWER = "Cerrar menu";
+
+  CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +30,11 @@ class CustomDrawer extends ConsumerWidget {
             child: Text('Drawer Header'),
           ),
           ListTile(
-            title: const Text('Got to Details Page'),
+            title: Text(
+              MY_DETAILS,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.5),
+            ),
             onTap: () async {
               // Update the state of the app.
               // ...
@@ -31,7 +43,11 @@ class CustomDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
-            title: const Text('Go to Second Page'),
+            title: Text(
+              MY_BUSSINES_DETAILS,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.5),
+            ),
             onTap: () async {
               // Update the state of the app.
               // ...
@@ -39,7 +55,23 @@ class CustomDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
-            title: const Text('Close Drawer programatically'),
+            title: Text(
+              ECHANGE_RATE_DATAILS,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.5),
+            ),
+            onTap: () async {
+              // Update the state of the app.
+              // ...
+              GoRouter.of(context).goNamed('second_page');
+            },
+          ),
+          ListTile(
+            title: Text(
+              CLOSE_DRAWER,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.5),
+            ),
             onTap: () {
               // Update the state of the app
               // ...

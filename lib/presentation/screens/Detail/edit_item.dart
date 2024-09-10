@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Qrcode_reader/qr_code_reader_windows.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:random_name_generator/random_name_generator.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:uuid/uuid.dart';
@@ -17,6 +19,7 @@ import 'package:uuid/uuid.dart';
 import '../../../constant.dart';
 import '../../../data/models/product.dart';
 import '../../providers/config_state_variables.dart';
+import '../../widgets/qr_image.dart';
 
 class CrudItemScreen extends ConsumerWidget {
   String CRUD_ITEM_TITLE = ' Producto';
@@ -145,6 +148,12 @@ class CrudItemScreen extends ConsumerWidget {
 
   String COLOR_EXISTS = 'El color ya existe';
 
+  String PRINT_QR_PRODUCT = 'Imprimir QR del producto';
+
+  late BuildContext oldDialogContext;
+
+  String CANCEL_BUTTON_LABEL = 'Cancelar';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color currentPickerColor = colorCodes['orange'] ?? Colors.pink;
@@ -183,6 +192,27 @@ class CrudItemScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                ///Print QR about ITEM
+                ///
+
+                Fluttertoast.showToast(
+                    msg: PRINT_QR_PRODUCT, toastLength: Toast.LENGTH_SHORT);
+
+                String currentItemJsonString =
+                    jsonEncode(selectedItem.toJson());
+
+                Navigator.push(context, MaterialPageRoute(
+                  builder: ((context) {
+                    return QRImage(currentItemJsonString);
+                  }),
+                ));
+              },
+              icon: const Icon(Icons.print_rounded),
+              style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(15))),
           actions: [
             IconButton(
                 onPressed: () {
@@ -310,7 +340,7 @@ class CrudItemScreen extends ConsumerWidget {
 
                   //Regex float number [-+]?[0-9]*\.?[0-9]*
                   RegExp re = RegExp(FLOAT_REGULAR_EXPRESSION);
-                  var resultMessage;
+                  var resultMessage = BAD_PRICE_NOT_VALID;
                   double numberPrice = toDouble(value ?? "0.0");
 
                   if (!re.hasMatch(value ?? "")) {
@@ -703,6 +733,12 @@ class CrudItemScreen extends ConsumerWidget {
 
   void changeColor(Color value) {
     currentPickerColor = pickerColor;
+  }
+
+  void onDismissTile() {
+    if (oldDialogContext != null) {
+      Navigator.of(oldDialogContext).pop();
+    }
   }
 }
 
