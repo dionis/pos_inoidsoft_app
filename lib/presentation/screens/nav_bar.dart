@@ -10,11 +10,14 @@ import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/item_sales_provider.dart';
+import 'Currency_exchange/currency_exchange.dart';
 import 'Detail/edit_item.dart';
 import 'Qrcode_reader/qr_code_reader_windows.dart';
 import '../../data/models/cart_item.dart';
 import 'Home/HomeBoard.dart';
 import 'Items/item_lists.dart';
+import 'Settings/bussines_settings.dart';
+import 'Settings_vendor/vendor_settings.dart';
 import 'post_screen/post_main_screen.dart';
 
 class BottomNavBar extends ConsumerStatefulWidget {
@@ -37,7 +40,10 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     ItemListsScreen(),
     const Stadistics(),
     const CalculatorScreen(),
-    CrudItemScreen(eventTitle: 'Add')
+    CrudItemScreen(eventTitle: 'Add'),
+    BussinesSettings(),
+    VendorSenttings(),
+    CurrencyExchage()
   ];
 
   // const ProductEditScreen()

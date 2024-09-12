@@ -97,3 +97,10 @@ OCR read image files.
 - [Flutter Web Scraping | ALL Tutorials](https://www.youtube.com/watch?v=wW9T5lP3DoY)
 
 - [scrapy](https://fluttergems.dev/packages/scrapy/)
+
+
+### Geolocalizacion and Maps
+
+- [maplibre_gl](https://pub.dev/packages/maplibre_gl/example)
+
+- [Flutter MapLibre GL](https://github.com/maplibre/flutter-maplibre-gl)

@@ -139,7 +139,7 @@ class CrudItemScreen extends ConsumerWidget {
   String ERROR_PRODUCT_NAME_EMPTY = 'El nombre del producto es obligatorio';
 
   String ERROR_PRODUCT_NAME_REGULAR_EXPRESSION =
-      " 'El nombre del producto solo puede contener letras y números'";
+      "El nombre del producto solo puede contener letras y números";
 
   String currentSelectedCategory = "Others";
   FilterType fromEditScreenEvent = FilterType.updateItemPos;

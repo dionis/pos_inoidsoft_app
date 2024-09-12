@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../providers/config_state_variables.dart';
+
 class CustomDrawer extends ConsumerWidget {
   String MY_DETAILS = 'Mis Datos';
 
@@ -10,6 +12,8 @@ class CustomDrawer extends ConsumerWidget {
   String ECHANGE_RATE_DATAILS = 'Tasa de cambio';
 
   String CLOSE_DRAWER = "Cerrar menu";
+
+  String STADISTICS_DATAILS = 'Estadísticas';
 
   CustomDrawer({super.key});
 
@@ -38,8 +42,12 @@ class CustomDrawer extends ConsumerWidget {
             onTap: () async {
               // Update the state of the app.
               // ...
-              GoRouter.of(context).goNamed('details_page',
-                  pathParameters: {'name': 'Plz suscribe'});
+              // GoRouter.of(context).goNamed('details_page',
+              //     pathParameters: {'name': 'Plz suscribe'});
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("VendorSenttings", 8);
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -51,7 +59,13 @@ class CustomDrawer extends ConsumerWidget {
             onTap: () async {
               // Update the state of the app.
               // ...
-              GoRouter.of(context).goNamed('second_page');
+              // GoRouter.of(context).goNamed('second_page');
+
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("BussinesSettings", 7);
+
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -63,7 +77,27 @@ class CustomDrawer extends ConsumerWidget {
             onTap: () async {
               // Update the state of the app.
               // ...
-              GoRouter.of(context).goNamed('second_page');
+              //GoRouter.of(context).goNamed('second_page');
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("CurrencyExchage", 9);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: Text(
+              STADISTICS_DATAILS,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.5),
+            ),
+            onTap: () async {
+              // Update the state of the app.
+              // ...
+              //GoRouter.of(context).goNamed('second_page');
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("CurrencyExchage", 9);
+              Navigator.pop(context);
             },
           ),
           ListTile(

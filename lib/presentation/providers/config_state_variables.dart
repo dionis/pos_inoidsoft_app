@@ -33,6 +33,15 @@ class CurrentIndex extends _$CurrentIndex {
       case 'ProductEditScreen':
         state = index ?? 6;
         break;
+      case 'BussinesSettings':
+        state = index ?? 7;
+        break;
+      case 'VendorSenttings':
+        state = index ?? 8;
+        break;
+      case 'CurrencyExchage':
+        state = index ?? 9;
+        break;
       default:
         state = 0;
         break;

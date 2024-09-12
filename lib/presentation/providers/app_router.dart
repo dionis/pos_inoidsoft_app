@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../screens/Home/HomeBoard.dart';
 import '../screens/PoS/post_main_screen.dart';
-import '../screens/Settings/settings.dart';
+import '../screens/Settings/bussines_settings.dart';
 import '../screens/nav_bar.dart';
 
 part 'app_router.g.dart';
@@ -30,7 +30,7 @@ GoRouter appRouter(AppRouterRef ref) {
             //Pass paramter and get their value
 
             final name = state.pathParameters['name'];
-            return const Settings();
+            return BussinesSettings();
           }),
       GoRoute(
           path: '/stadisticsPage',

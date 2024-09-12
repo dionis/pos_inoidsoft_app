@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
-
-import 'presentation/screens/PoS/post_main_screen.dart';
 import 'presentation/providers/app_router.dart';
 
 void main() => runApp(const ProviderScope(
