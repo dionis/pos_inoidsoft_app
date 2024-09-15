@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/config_state_variables.dart';
+import '../providers/item_sales_provider.dart';
 
 class CustomDrawer extends ConsumerWidget {
   String MY_DETAILS = 'Mis Datos';
@@ -95,8 +96,11 @@ class CustomDrawer extends ConsumerWidget {
               // ...
               //GoRouter.of(context).goNamed('second_page');
               ref
+                  .read(itemSalesCurrentFilterProvider.notifier)
+                  .changeCurrentFilter(FilterType.all);
+              ref
                   .read(currentIndexProvider.notifier)
-                  .updateCurrentMainWidget("CurrencyExchage", 9);
+                  .updateCurrentMainWidget("Stadistics", 4);
               Navigator.pop(context);
             },
           ),

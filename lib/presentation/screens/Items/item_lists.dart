@@ -88,8 +88,11 @@ class ItemListsScreen extends ConsumerWidget {
                       .updateCurrentMainWidget("ProductEditScreen", 6);
                 },
                 onAddInCartSales: () {
-                  CartItem productToCart = CartItem(
-                      quantity: itemProduct.rate.toInt(), product: itemProduct);
+                  int salesQuantity = itemProduct.rate.toInt();
+                  salesQuantity = salesQuantity == 0 ? 1 : salesQuantity;
+
+                  CartItem productToCart =
+                      CartItem(quantity: salesQuantity, product: itemProduct);
 
                   productToCart.id = cartItemShow.id;
 

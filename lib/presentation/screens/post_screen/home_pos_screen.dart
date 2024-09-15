@@ -1,16 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/data/models/product.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/chage_currency.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/payment_method.dart';
-import 'package:string_validator/string_validator.dart';
 
-import '../Qrcode_reader/qr_code_reader_windows.dart';
 import '../../../data/models/cart_item.dart';
 import '../../providers/config_state_variables.dart';
 import '../../providers/item_sales_provider.dart';
@@ -356,7 +351,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                     height: 60,
                     width: 180,
                     child: FloatingActionButton(
-                      onPressed: onDismiss,
+                      onPressed: onDismissPayment,
                       child: const Text('Dismiss dialog'),
                     ),
                   ),
@@ -457,6 +452,17 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   onDismiss() {
     if (oldDialogContext != null) {
       Navigator.of(oldDialogContext).pop();
+    }
+  }
+
+  onDismissPayment() {
+    if (oldDialogContext != null) {
+      Navigator.of(oldDialogContext).pop();
+
+      //Home
+      ref
+          .read(currentIndexProvider.notifier)
+          .updateCurrentMainWidget("SalesInvoice", 10);
     }
     //oldDialogContext = null;
   }

@@ -4,9 +4,7 @@ import 'package:pos_inoidsoft_app/constant.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Calculator/calculator_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/Product/product_screen.dart';
 import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/stadistics.dart';
-import 'package:pos_inoidsoft_app/presentation/screens/favorite.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/item_sales_provider.dart';
@@ -16,6 +14,7 @@ import 'Qrcode_reader/qr_code_reader_windows.dart';
 import '../../data/models/cart_item.dart';
 import 'Home/HomeBoard.dart';
 import 'Items/item_lists.dart';
+import 'Sales_invoice/sales_invoive.dart';
 import 'Settings/bussines_settings.dart';
 import 'Settings_vendor/vendor_settings.dart';
 import 'post_screen/post_main_screen.dart';
@@ -43,7 +42,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     CrudItemScreen(eventTitle: 'Add'),
     BussinesSettings(),
     VendorSenttings(),
-    CurrencyExchage()
+    const CurrencyExchage(),
+    const SalesInvoice(),
   ];
 
   // const ProductEditScreen()

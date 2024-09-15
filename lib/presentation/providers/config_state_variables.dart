@@ -42,6 +42,9 @@ class CurrentIndex extends _$CurrentIndex {
       case 'CurrencyExchage':
         state = index ?? 9;
         break;
+      case 'SalesInvoice':
+        state = index ?? 10;
+        break;
       default:
         state = 0;
         break;

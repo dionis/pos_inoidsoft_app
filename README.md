@@ -98,9 +98,60 @@ OCR read image files.
 
 - [scrapy](https://fluttergems.dev/packages/scrapy/)
 
+### Flutter Custom Dropdown
+
+- [Flutter Dropdown | Create Custom Dropdown in Flutter](https://www.youtube.com/watch?v=-PmfktqqwlA)
+
+-  [Custom Dropdown](https://pub.dev/documentation/animated_custom_dropdown/latest/)
+
+- [Building a custom dropdown in Flutter ](https://dev.to/josuestuff/building-a-custom-dropdown-in-flutter-55h9)
+
+- [Creating Custom Dropdowns with OverlayPortal in Flutter](https://medium.com/snapp-x/creating-custom-dropdowns-with-overlayportal-in-flutter-4f09b217cfce)
+
+- [Custom Drop-Down List Flutter Widget with Focus and Keyboard Support](https://medium.com/@dmitrysikorsky/custom-drop-down-list-flutter-widget-with-focus-and-keyboard-support-681c1015113f)
+
+
+
+### Create Invoice in Flutter
+
+- [Invoice Generator with Flutter](https://github.com/tanvir-robin/Invoice-Generator-Mobile-App?tab=readme-ov-file)
+
+- [Invoice Ninja](https://github.com/invoiceninja/flutter-package)
+
+- [Create and Print a PDF in Flutter: A Payment Receipt Example](https://medium.com/@subhashchandrashukla/create-and-print-a-pdf-in-flutter-a-payment-receipt-example-22f61c62a726)
+
+## Table and DataTable in Flutter 
+
+- [How to Combine Lists in Dart with Example](https://medium.com/elnkart/how-to-combine-lists-in-dart-with-example-ebd6e1d768f)
+
+- [The Art of Organizing Data with the Flutter Table Class](https://www.dhiwise.com/post/the-art-of-organizing-data-with-the-flutter-table-class)
+
+- [Mastering Structured Layouts with Flutter’s Table Widget: A Comprehensive Guide](https://medium.com/@ravipatel84184/mastering-structured-layouts-with-flutters-table-widget-a-comprehensive-guide-655ae3970cf1)
+
+- [DataTable to fit screen width](https://groups.google.com/g/flutter-dev/c/enDLT9kOqYQ)
+
+- [material_table_view ](https://pub.dev/packages/material_table_view)
+
 
 ### Geolocalizacion and Maps
 
 - [maplibre_gl](https://pub.dev/packages/maplibre_gl/example)
 
 - [Flutter MapLibre GL](https://github.com/maplibre/flutter-maplibre-gl)
+
+# Add dash line 
+
+- [How to add line dash in Flutter](https://stackoverflow.com/questions/54019785/how-to-add-line-dash-in-flutter)
+
+- [Flutter — paint dashed line (both horizontal and vertical axis)](https://icanseker.medium.com/flutter-paint-dashed-line-both-horizontal-and-vertical-axis-340eac726ede)
+
+- [Divider class ](https://api.flutter.dev/flutter/material/Divider-class.html)
+
+- [Creating Clear, Organized Layouts with Flutter's Divider Widget](https://www.dhiwise.com/post/creating-organized-layouts-with-flutter-divider-widget)
+
+## DateFormart for show date
+
+- [From Timestamp to User-Friendly: Formatting Date and Time in Flutter
+Aryan Bisht](https://medium.com/@AryanBeast/format-date-and-time-in-flutter-1a8edfab1054)
+
+- [DateFormat class ](https://api.flutter.dev/flutter/intl/DateFormat-class.html)
