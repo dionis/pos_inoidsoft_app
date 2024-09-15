@@ -155,3 +155,12 @@ OCR read image files.
 Aryan Bisht](https://medium.com/@AryanBeast/format-date-and-time-in-flutter-1a8edfab1054)
 
 - [DateFormat class ](https://api.flutter.dev/flutter/intl/DateFormat-class.html)
+
+
+## Add Tab bar options
+
+- [Work with tabs](https://docs.flutter.dev/cookbook/design/tabs)
+
+- [TabBar class ](https://api.flutter.dev/flutter/material/TabBar-class.html)
+
+- [TabBar and TabView in Flutter](https://medium.com/@MarvelApps_/tabbar-and-tabview-in-flutter-1d93008663aa)
