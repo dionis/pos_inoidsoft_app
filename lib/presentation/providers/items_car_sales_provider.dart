@@ -152,4 +152,99 @@ class ItemsSalesCart extends _$ItemsSalesCart {
   void deleteProduct(int index) {
     state = [...state]..removeAt(index);
   }
+
+  void clearCart() {
+    state = [];
+  }
+}
+
+@Riverpod(keepAlive: true)
+class StadisticsSalesCart extends _$StadisticsSalesCart {
+  @override
+  List<List<CartItem>> build() {
+    // return [
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    //   Product(
+    //       title: RandomNames(Zone.spain).fullName(),
+    //       description: RandomNames(Zone.spain).fullName(),
+    //       image: '',
+    //       price: Random(345).nextDouble(),
+    //       colors: List.empty()..addAll([Colors.red, Colors.green, Colors.blue]),
+    //       category: RandomNames(Zone.spain).fullName(),
+    //       rate: Random(345).nextDouble()),
+    // ];
+
+    return [];
+
+    //  // CartItem(quantity: 2, product: products[0]),
+    //   CartItem(quantity: 1, product: products[1]),
+    //   CartItem(quantity: 15, product: products[2]),
+    //   CartItem(quantity: 2, product: products[3]),
+    //   CartItem(quantity: 7, product: products[4]),
+    //   // CartItem(quantity: 1, product: products[5]),
+    //   // CartItem(quantity: 1, product: products[6]),
+    //   CartItem(quantity: 1, product: products[7]),
+  }
+
+  bool addSalesCart(List<CartItem> cart) {
+    state = [...state, cart];
+    return true;
+  }
+
+  void deleteProduct(int index) {
+    state = [...state]..removeAt(index);
+  }
+
+  void clearCart() {
+    state = [];
+  }
+
+  List<CartItem> get lastInsertedSales => [...state].last;
 }

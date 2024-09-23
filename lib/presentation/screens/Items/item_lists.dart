@@ -6,13 +6,13 @@ import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dar
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 
 import '../../../data/models/cart_item.dart';
+import '../../../data/models/category.dart';
 import '../../../data/models/product.dart';
 import '../../providers/config_state_variables.dart';
-import '../../widgets/cart_tile.dart';
 import '../../widgets/cart_tile_store.dart';
 import '../../widgets/categories.dart';
-import '../../widgets/chage_currency.dart';
 import '../../widgets/search_bar.dart';
+import '../../../constant.dart';
 
 class ItemListsScreen extends ConsumerWidget {
   late BuildContext oldDialogContext;
@@ -22,11 +22,13 @@ class ItemListsScreen extends ConsumerWidget {
   String DIALOG_MESSAGE_ADD_TO_CART =
       'El producto ya ha sido agregado al carrito';
 
+  late List<Product> itemLists;
+
   ItemListsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //final itemLists = ref.watch(itemSalesCurrentFilterProvider);
+    itemLists = ref.watch(itemSalesProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -34,41 +36,51 @@ class ItemListsScreen extends ConsumerWidget {
           //padding: const EdgeInsets.all(20),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        //const SizedBox(height: 35),
-        // for custom app bar
-        //const CustomAppBar(),
-        //const SizedBox(height: 25),
-        // for main items search
-        const CustomSearchBar(),
+        CustomSearchBar(),
         const SizedBox(height: 5),
-        const Categories(),
-        const SizedBox(height: 5),
+        Categories(
+          onSelected: () {
+            final Category filteredCategory =
+                ref.watch(categorySelectedProvider);
+            ref
+                .read(itemSalesProvider.notifier)
+                .filteredItemSalesByCategory(filteredCategory);
+          },
+        ),
+        const SizedBox(height: 1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
+            GestureDetector(
+              onTap: () => ref.read(itemSalesProvider.notifier).showAll(),
+              child: Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: Text(
+                  SEE_ALL,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: kprimaryColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(20),
             itemBuilder: (context, index) {
-              Product itemProduct = ref.read(itemSalesProvider)[index];
+              Product itemProduct = itemLists[index];
               final cartItemShow = CartItem(
                   quantity: itemProduct.rate.toInt(), product: itemProduct);
 
               return CarTileStore(
                 item: cartItemShow,
-                onRemove: () {
-                  // if (cartItemShow.quantity != 1) {
-                  //   itemProduct.rate = (cartItemShow.quantity--).toDouble();
-                  // }
-
-                  // ref
-                  //     .read(itemSalesProvider.notifier)
-                  //     .updateProduct(itemProduct, index);
-                },
-                onAdd: () {
-                  // itemProduct.rate = (cartItemShow.quantity++).toDouble();
-                  // ref
-                  //     .read(itemSalesProvider.notifier)
-                  //     .updateProduct(itemProduct, index);
-                },
+                onRemove: () {},
+                onAdd: () {},
                 onDeleteItem: () {
                   ref.read(itemSalesProvider.notifier).deleteProduct(index);
                 },
@@ -104,23 +116,12 @@ class ItemListsScreen extends ConsumerWidget {
                     Fluttertoast.showToast(
                         msg: DIALOG_MESSAGE_ADD_TO_CART,
                         toastLength: Toast.LENGTH_SHORT);
-                    // showDialog(
-                    //     context: context,
-                    //     barrierDismissible: false,
-                    //     builder: (BuildContext dialogContext) {
-                    //       oldDialogContext = dialogContext;
-
-                    //       return ChangeCurremcyDialog(
-                    //           title: DIALOG_TITLE_ADD_TO_CART,
-                    //           content: DIALOG_MESSAGE_ADD_TO_CART,
-                    //           actions: const <Widget>[]);
-                    //     });
                   }
                 },
               );
             },
             //separatorBuilder: (context, index) => const SizedBox(height: 5),
-            itemCount: ref.watch(itemSalesProvider).length,
+            itemCount: itemLists.length,
           ),
         )
       ])),

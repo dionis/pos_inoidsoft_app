@@ -7,8 +7,9 @@ class Currency {
   String profit = '0.0';
 
   String imageAvatar = '';
+  String excangheType = 'Manual';
 
-  void set currencyGetRate(DateTime _newTime) => time = _newTime;
+  void set currencyDateSetRate(DateTime _newTime) => time = _newTime;
 
   Currency(
       {required this.name,

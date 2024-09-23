@@ -42,3 +42,29 @@ const MY_SALES = 'Mis ventas';
 const BY_PRODUCT_SALES = 'Por producto';
 
 const STADISCTICS_TITLE = 'Estadísticas de ventas';
+
+String BNC = 'Banco Nancional de Cuba';
+String CADECA = 'Cadeca';
+String EXTERNAL = 'Exterior';
+String MANUAL = 'Manual';
+
+//List<String> currencyExchangeSource = [MANUAL, CADECA, EXTERNAL];
+List<String> currencyExchangeSource = [MANUAL];
+
+String TYPE_EXCHANGE = 'Fuente de referencia';
+
+String CANCEL_ACTION = 'Cerrar';
+
+String TITLE_CHANGE_COIN = 'Tipo de moneda';
+
+String SEE_ALL = 'Ver Todos';
+
+String TITLE_PAYMENT_METHOD = 'Forma de pago';
+
+String BUSSINES_NAME = 'Nombre del negocio';
+
+String BUSSINES_ADDRESS = 'Dirección del negocio';
+
+String BUSSINES_PHONE_NUMBER = 'Teléfono del negocio';
+
+String BUSSINES_WEBPAGE = "Página web del negocio";

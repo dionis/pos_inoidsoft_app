@@ -114,6 +114,10 @@ class CustomDrawer extends ConsumerWidget {
               // Update the state of the app
               // ...
               // Then close the drawer
+
+              ref
+                  .read(currentIndexProvider.notifier)
+                  .updateCurrentMainWidget("Homeboard", 0);
               Navigator.pop(context);
             },
           ),

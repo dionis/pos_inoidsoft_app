@@ -9,6 +9,7 @@ import 'package:pos_inoidsoft_app/presentation/widgets/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/item_sales_provider.dart';
 import 'Currency_exchange/currency_exchange.dart';
+import 'Currency_exchange/edit_currency.dart';
 import 'Detail/edit_item.dart';
 import 'Qrcode_reader/qr_code_reader_windows.dart';
 import '../../data/models/cart_item.dart';
@@ -28,7 +29,6 @@ class BottomNavBar extends ConsumerStatefulWidget {
 
 class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int currentIndexReference = 0;
-  int shoppingCartSizeReference = 0;
   int currentProductIndexReference = 0;
   List<CartItem> cartItemsList = [];
 
@@ -44,6 +44,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     VendorSenttings(),
     const CurrencyExchage(),
     const SalesInvoice(),
+    EditCurrencyWidget(eventTitle: 'Add'),
   ];
 
   // const ProductEditScreen()
@@ -73,13 +74,13 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         ),
         actions: [
           _shoopingCartBadget(),
-          IconButton(
-              onPressed: () {},
-              iconSize: 30,
-              style: IconButton.styleFrom(
-                  backgroundColor: kcontentColor,
-                  padding: const EdgeInsets.all(20)),
-              icon: const Icon(Icons.notifications_outlined))
+          // IconButton(
+          //     onPressed: () {},
+          //     iconSize: 30,
+          //     style: IconButton.styleFrom(
+          //         backgroundColor: kcontentColor,
+          //         padding: const EdgeInsets.all(20)),
+          //     icon: const Icon(Icons.notifications_outlined))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -98,7 +99,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         backgroundColor: kprimaryColor,
         shape: const CircleBorder(),
         child: const Icon(
-          Icons.home,
+          Icons.shopping_cart_outlined,
           color: Colors.white,
           size: 35,
         ),
@@ -178,7 +179,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    //currentIndexReference = 3;
+                    ref.read(itemSalesProvider.notifier).showAll();
                     ref
                         .read(itemSalesCurrentFilterProvider.notifier)
                         .changeCurrentFilter(FilterType.all);
@@ -222,8 +223,6 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   }
 
   Widget _shoopingCartBadget() {
-    shoppingCartSizeReference = ref.watch(shoppinCartSizeProvider);
-
     cartItemsList = ref.watch(itemsSalesCartProvider);
 
     return badges.Badge(
@@ -237,7 +236,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
         badgeColor: Colors.red,
       ),
       badgeContent: Text(
-        shoppingCartSizeReference.toString(),
+        cartItemsList.length.toString(),
         style: const TextStyle(color: Colors.white),
       ),
       child: IconButton(

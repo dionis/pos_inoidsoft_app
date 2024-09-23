@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../constant.dart';
 import 'package:pos_inoidsoft_app/data/models/product.dart';
 import '../../../presentation/widgets/product_cart.dart';
 
 import '../../widgets/categories.dart';
-import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_image_slider.dart';
 import '../../widgets/search_bar.dart';
 
@@ -27,7 +25,7 @@ class Homeboard extends StatelessWidget {
               //const CustomAppBar(),
               //const SizedBox(height: 25),
               // for main items search
-              const CustomSearchBar(),
+              CustomSearchBar(),
               const SizedBox(height: 25),
               // for image slide
               CustomImageSlider(
@@ -38,7 +36,9 @@ class Homeboard extends StatelessWidget {
               const SizedBox(height: 25),
               //for category selection
               //https://youtu.be/UHUSqJDKe-Q?list=LL&t=1660
-              const Categories(),
+              Categories(
+                onSelected: () {},
+              ),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

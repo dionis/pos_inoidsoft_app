@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:random_name_generator/random_name_generator.dart';
 
@@ -20,7 +21,10 @@ class _SalesInvoiceState extends ConsumerState<SalesInvoice> {
 
   @override
   Widget build(BuildContext context) {
-    final salesInvoiceData = ref.watch(itemsSalesCartProvider);
+    final salesInvoiceData =
+        ref.read(stadisticsSalesCartProvider.notifier).lastInsertedSales;
+
+    final paymentMethodName = ref.watch(paymentMethodProvider);
 
     List<Map<String, String>> totalSalesData = [
       {
@@ -67,41 +71,57 @@ class _SalesInvoiceState extends ConsumerState<SalesInvoice> {
                     child: const Icon(Icons.print_outlined))
               ],
             ),
-            const Center(
+            Center(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.business_outlined,
                         size: 50,
                       ),
                       Text(
-                        'Bussines Name',
+                        BUSSINES_NAME,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
+                            color: Colors.grey.shade400,
                             fontSize: 35),
                       ),
-                      SizedBox(
+                      Text(
+                        BUSSINES_NAME,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade400,
+                            fontSize: 30),
+                      ),
+                      const SizedBox(
                         height: 3,
                       ),
-                      Text("Bussines Address",
-                          style: TextStyle(
+                      Text(BUSSINES_ADDRESS,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20.5)),
-                      SizedBox(
+                      Text(BUSSINES_ADDRESS,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17)),
+                      const SizedBox(
                         height: 3,
                       ),
-                      Text("Bussines Phones",
-                          style: TextStyle(
+                      Text(BUSSINES_PHONE_NUMBER,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15.5)),
-                      SizedBox(
+                      Text(BUSSINES_PHONE_NUMBER,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 11.5)),
+                      const SizedBox(
                         height: 3,
                       ),
-                      Text("Bussines webpage",
-                          style: TextStyle(
+                      Text(BUSSINES_WEBPAGE,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 12.5)),
+                      Text(BUSSINES_WEBPAGE,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 9.5)),
                     ]),
               ),
             ),
@@ -117,8 +137,8 @@ class _SalesInvoiceState extends ConsumerState<SalesInvoice> {
                   child: DataTable(
                       columnSpacing: 30,
                       border: TableBorder.all(color: Colors.white),
-                      headingRowColor: const WidgetStatePropertyAll<Color?>(
-                          Colors.blueAccent),
+                      headingRowColor:
+                          const WidgetStatePropertyAll<Color?>(Colors.grey),
                       columns: [
                     DataColumn(
                         label: Text(
@@ -139,8 +159,7 @@ class _SalesInvoiceState extends ConsumerState<SalesInvoice> {
                             .format(DateTime.now()),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       )),
-                      DataCell(Text(paymentMethod[
-                          Random().nextInt(paymentMethod.length)])),
+                      DataCell(Text(paymentMethodName)),
                     ]),
                     DataRow(cells: [
                       const DataCell(Text(
@@ -201,7 +220,7 @@ class _SalesInvoiceState extends ConsumerState<SalesInvoice> {
                 //columnSpacing: 30,
                 border: TableBorder.all(color: Colors.white),
                 headingRowColor:
-                    const WidgetStatePropertyAll<Color?>(Colors.blueAccent),
+                    WidgetStatePropertyAll<Color?>(Colors.grey[400]),
                 columns: const [
                   DataColumn(
                       label: Text(

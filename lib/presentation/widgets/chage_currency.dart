@@ -16,7 +16,7 @@ class ChangeCurremcyDialog extends StatelessWidget {
     return AlertDialog(
         title: Text(
           this.title,
-          style: Theme.of(context).textTheme.titleSmall,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         actions: this.actions,
         content: Text(

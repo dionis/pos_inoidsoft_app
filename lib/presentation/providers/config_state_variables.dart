@@ -1,5 +1,8 @@
+import 'package:pos_inoidsoft_app/data/models/category.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/categories.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../constant.dart';
 import '../../data/models/cart_item.dart';
 part 'config_state_variables.g.dart';
 
@@ -45,6 +48,9 @@ class CurrentIndex extends _$CurrentIndex {
       case 'SalesInvoice':
         state = index ?? 10;
         break;
+      case 'EditCurrencyWidget':
+        state = index ?? 11;
+        break;
       default:
         state = 0;
         break;
@@ -59,5 +65,33 @@ class ShoppinCartSize extends _$ShoppinCartSize {
 
   updateShoppingCartSize(int size) {
     state = size;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class CurrentExchangeCoinSource extends _$CurrentExchangeCoinSource {
+  @override
+  String build() => currencyExchangeSource[0];
+
+  updateShoppingCartSize(String newCurrentExchangeCoin) {
+    state = newCurrentExchangeCoin;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class CategorySelected extends _$CategorySelected {
+  @override
+  Category build() => Category(title: 'All', image: 'assets/no-image.jpg');
+
+  void set update(Category newCategory) => state = newCategory;
+}
+
+@Riverpod(keepAlive: true)
+class PaymentMethod extends _$PaymentMethod {
+  @override
+  String build() => paymentMethod.first;
+
+  void setPayment(String newPaymentMethod) {
+    state = newPaymentMethod;
   }
 }

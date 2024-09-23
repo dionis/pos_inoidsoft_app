@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_inoidsoft_app/constant.dart';
 
-class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+import '../providers/item_sales_provider.dart';
+
+class CustomSearchBar extends ConsumerWidget {
+  bool advanceSearch = false;
+  CustomSearchBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 55,
       width: double.infinity,
@@ -20,8 +24,15 @@ class CustomSearchBar extends StatelessWidget {
             size: 30,
           ),
           const SizedBox(width: 10),
-          const Flexible(
+          Flexible(
               child: TextField(
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      ref
+                          .read(itemSalesProvider.notifier)
+                          .filteredItemSalesByName(value);
+                    }
+                  },
                   decoration: InputDecoration(
                       hintText: "Search...", border: InputBorder.none))),
           Container(

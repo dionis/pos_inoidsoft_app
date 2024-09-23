@@ -233,23 +233,3 @@ List<IconData> categoryIcons = [
   Icons.music_note,
   Icons.more_horiz,
 ];
-
-Map<String, String> itemCategoriesEsMap = {
-  'Electrónicos': '',
-  'Ropas': '',
-  'Libros': '',
-  'Casa & Jardín': '',
-  'Deportes & Entretenimiento': '',
-  'Belleza & Cuidado personal': '',
-  'Juguetes & Juegos': '',
-  'Automotive': '',
-  'Dulces': '',
-  'Salud & Bienestar': '',
-  'Mascotas': '',
-  'Productos de oficina': '',
-  'Joyas': '',
-  'Herramients & Mejoras del hogar': '',
-  'Bebes': '',
-  'Musica & Instrumentos': '',
-  'Otros': ''
-};

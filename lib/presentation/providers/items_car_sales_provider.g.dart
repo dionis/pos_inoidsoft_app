@@ -40,7 +40,7 @@ final selectedInSalesCartProductIndexProvider =
 );
 
 typedef _$SelectedInSalesCartProductIndex = Notifier<int>;
-String _$itemsSalesCartHash() => r'fc9ced02a0f0280fcb7a7dac3d7e84bf63eb3dac';
+String _$itemsSalesCartHash() => r'48ab77df6441c765aa1c934c89abd882df87548a';
 
 /// See also [ItemsSalesCart].
 @ProviderFor(ItemsSalesCart)
@@ -56,5 +56,22 @@ final itemsSalesCartProvider =
 );
 
 typedef _$ItemsSalesCart = Notifier<List<CartItem>>;
+String _$stadisticsSalesCartHash() =>
+    r'd7924994445d01aec73dacfe9be541904aa0bfe2';
+
+/// See also [StadisticsSalesCart].
+@ProviderFor(StadisticsSalesCart)
+final stadisticsSalesCartProvider =
+    NotifierProvider<StadisticsSalesCart, List<List<CartItem>>>.internal(
+  StadisticsSalesCart.new,
+  name: r'stadisticsSalesCartProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$stadisticsSalesCartHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$StadisticsSalesCart = Notifier<List<List<CartItem>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

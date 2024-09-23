@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
 
 import '../../../constant.dart';
 import '../Currency_exchange/chart.dart';
@@ -48,7 +50,7 @@ class Stadistics extends StatelessWidget {
                     Radius.circular(5),
                   ),
                 ),
-                child: const ByMomentStadistic(moment: MomentTypes.daily),
+                child: ByMomentStadistic(moment: MomentTypes.daily),
               ),
             ),
             Padding(
@@ -60,7 +62,7 @@ class Stadistics extends StatelessWidget {
                     Radius.circular(5),
                   ),
                 ),
-                child: const ByMomentStadistic(moment: MomentTypes.weekly),
+                child: ByMomentStadistic(moment: MomentTypes.weekly),
               ),
             ),
             Padding(
@@ -72,7 +74,7 @@ class Stadistics extends StatelessWidget {
                     Radius.circular(5),
                   ),
                 ),
-                child: const ByMomentStadistic(moment: MomentTypes.monthly),
+                child: ByMomentStadistic(moment: MomentTypes.monthly),
               ),
             )
           ],
@@ -84,10 +86,23 @@ class Stadistics extends StatelessWidget {
 
 class ByMomentStadistic extends ConsumerWidget {
   final MomentTypes moment;
-  const ByMomentStadistic({super.key, this.moment = MomentTypes.daily});
+
+  List<String> _listProductName = [];
+
+  ByMomentStadistic({super.key, this.moment = MomentTypes.daily});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ///####################################################################
+    ///  Bibliografy:
+    ///    https://github.com/AbdullahChauhan/custom-dropdown/blob/master/example/lib/widgets/search_dropdown.dart
+    ///
+    ///
+    /// #################################################################
+
+    _listProductName =
+        ref.watch(itemSalesProvider).map((e) => e.title).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -131,6 +146,18 @@ class ByMomentStadistic extends ConsumerWidget {
         ),
 
         /// Select one products from the list and show the chart
+        CustomDropdown<String>.search(
+          hintText: 'Select cuisines',
+          items: _listProductName,
+          initialItem: _listProductName[0],
+          overlayHeight: 342,
+          onChanged: (value) {
+            print('SearchDropdown onChanged value: $value');
+            // setState(() {
+            //   selectedItem = value;
+            // });
+          },
+        ),
         SizedBox(
           height: MediaQuery.of(context).size.height / 6,
           child: const Stack(children: [

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:pos_inoidsoft_app/data/models/exchange_coin.dart';
 import 'package:pos_inoidsoft_app/data/models/product.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/chage_currency.dart';
 import 'package:pos_inoidsoft_app/presentation/widgets/payment_method.dart';
 
+import '../../../constant.dart';
 import '../../../data/models/cart_item.dart';
 import '../../providers/config_state_variables.dart';
+import '../../providers/currency_coin_exchange.dart';
 import '../../providers/item_sales_provider.dart';
 import '../../widgets/cart_tile.dart';
 
@@ -49,8 +52,23 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
 
   late BuildContext oldDialogContext;
 
+  ExchangeCoin? currencyCoinExchange;
+
+  TextEditingController resultController = TextEditingController();
+
+  List<ExchangeCoin> currencyCoinList = [];
+
+  String currentPaymentMethod = paymentMethod.first;
+
   @override
   Widget build(BuildContext context) {
+    currencyCoinExchange = ref.watch(selectedCoinProvider);
+    currencyCoinList = ref.watch(itemsExchangeCoinProvider);
+
+    currencyCoinExchange = currencyCoinList
+        .where((element) => element.title == currencyCoinExchange!.title)
+        .toList()
+        .first;
     return SafeArea(
         child: Scaffold(
             //appBar: AppBar(),
@@ -70,10 +88,9 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
     calculateItems();
 
     return Column(
-      // mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 5, bottom: 10),
+          padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: TextField(
             onChanged: (value) => _onSearchInItems(value),
             decoration: InputDecoration(
@@ -160,19 +177,21 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                   )),
         Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 3),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            child: Column(
               children: [
-                const Text("\$ ",
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.end,
-                    textDirection: TextDirection.rtl),
-                Text(
-                  resultOutput,
+                TextField(
+                  controller: resultController,
                   style: const TextStyle(
                       fontSize: 48, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.end,
-                  textDirection: TextDirection.rtl,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      labelText: " ${currencyCoinExchange!.title}",
+                      labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.red,
+                          decoration: TextDecoration.none)),
                 ),
               ],
             )),
@@ -271,6 +290,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         //Delete option
         userInput = "";
         resultOutput = "0";
+        ref.read(itemsSalesCartProvider.notifier).clearCart();
         return;
       case 'C':
         if (userInput.isNotEmpty) {
@@ -298,6 +318,7 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         return;
       case '/':
         //Item list
+        ref.read(itemSalesProvider.notifier).showAll();
 
         ref
             .read(currentIndexProvider.notifier)
@@ -307,57 +328,156 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
         //Calculator
         ref
             .read(currentIndexProvider.notifier)
-            .updateCurrentMainWidget("Calculator", 5);
+            .updateCurrentMainWidget("CalculatorScreen", 5);
         return;
       case '7':
         //Show window selection for diferent payment methods for chance mony price
         //MLC, USD, EURO, CUP
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext dialogContext) {
-              oldDialogContext = dialogContext;
-              return ChangeCurremcyDialog(
-                title: 'Title Change Currency',
-                content: 'Dialog content',
-                actions: <Widget>[
-                  Container(
-                    height: 60,
-                    width: 180,
-                    child: FloatingActionButton(
-                      onPressed: onDismiss,
-                      child: const Text('Dismiss dialog'),
-                    ),
-                  ),
-                ],
-              );
-            });
 
+        if (foundItems.isNotEmpty) {
+          ref
+              .read(selectedCoinProvider.notifier)
+              .setCoin(currencyCoinList.first);
+
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext dialogContext) {
+                oldDialogContext = dialogContext;
+
+                return ChangeCurremcyDialog(
+                  title: TITLE_CHANGE_COIN,
+                  content: '',
+                  actions: <Widget>[
+                    SizedBox(
+                        height: 120,
+                        width: 180,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            DropdownButton(
+                                borderRadius: BorderRadius.circular(20)
+                                    .copyWith(topLeft: Radius.circular(0)),
+                                isExpanded: true,
+                                hint: Text(TYPE_EXCHANGE,
+                                    style: const TextStyle(fontSize: 15)),
+                                value: currencyCoinExchange,
+                                items: currencyCoinList
+                                    .map((element) => DropdownMenuItem(
+                                        value: element,
+                                        child: Text(element.title,
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45))))
+                                    .toList(),
+                                onChanged: (val) {
+                                  //print('SearchDropdown onChanged value: $val');
+                                  final changeCurrency = val as ExchangeCoin;
+
+                                  ref
+                                      .read(selectedCoinProvider.notifier)
+                                      .setCoin(changeCurrency);
+
+                                  ref
+                                      .read(currentExchangeCoinSourceProvider
+                                          .notifier)
+                                      .updateShoppingCartSize(
+                                          changeCurrency!.title);
+                                  setState(() {});
+                                  onDismiss();
+                                }),
+                            SizedBox(
+                              width: 180,
+                              child: FloatingActionButton(
+                                onPressed: onDismiss,
+                                backgroundColor: Colors.grey,
+                                child: Text(
+                                  CANCEL_ACTION,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ],
+                );
+              });
+        }
         break;
       case '+':
         //Payment
         //Show window selection for diferent payment methods using Transfermovil, EnZone
         //Pay in chash, dual (Payment gateway and cash)
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext dialogContext) {
-              oldDialogContext = dialogContext;
-              return PaymentMethodDialog(
-                title: 'Title Payment Method',
-                content: 'Dialog content',
-                actions: <Widget>[
-                  Container(
-                    height: 60,
-                    width: 180,
-                    child: FloatingActionButton(
-                      onPressed: onDismissPayment,
-                      child: const Text('Dismiss dialog'),
+        if (foundItems.isNotEmpty) {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext dialogContext) {
+                oldDialogContext = dialogContext;
+                return PaymentMethodDialog(
+                  title: TITLE_PAYMENT_METHOD,
+                  content: '',
+                  actions: <Widget>[
+                    DropdownButton(
+                        borderRadius: BorderRadius.circular(20)
+                            .copyWith(topLeft: const Radius.circular(0)),
+                        isExpanded: true,
+                        hint: Text(TYPE_EXCHANGE,
+                            style: const TextStyle(fontSize: 15)),
+                        value: currentPaymentMethod,
+                        items: paymentMethod
+                            .map((element) => DropdownMenuItem(
+                                value: element,
+                                child: Text(element,
+                                    style: const TextStyle(
+                                        fontSize: 15, color: Colors.black45))))
+                            .toList(),
+                        onChanged: (val) {
+                          //print('SearchDropdown onChanged value: $val');
+                          final seletedPaymentMethod = val as String;
+                          setState(() {
+                            currentPaymentMethod = seletedPaymentMethod;
+
+                            ref
+                                .read(paymentMethodProvider.notifier)
+                                .setPayment(seletedPaymentMethod);
+
+                            ref
+                                .read(stadisticsSalesCartProvider.notifier)
+                                .addSalesCart(foundItems);
+
+                            ref
+                                .read(itemsSalesCartProvider.notifier)
+                                .clearCart();
+                          });
+
+                          //Save as Sales Stadistics
+
+                          ///Clean the current in Sales Invoce when was saved
+
+                          ref
+                              .read(currentIndexProvider.notifier)
+                              .updateCurrentMainWidget("SalesInvoice", 10);
+                          onDismiss();
+                        }),
+                    SizedBox(
+                      height: 60,
+                      width: 180,
+                      child: FloatingActionButton(
+                        onPressed: onDismissPayment,
+                        child: Text(
+                          CANCEL_ACTION,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              );
-            });
+                  ],
+                );
+              });
+        }
 
         break;
       case '8':
@@ -395,7 +515,8 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
           0,
           (tot, item) =>
               tot.toDouble() + (item.product?.price ?? 1) * item.quantity);
-      resultOutput = total.toStringAsFixed(2);
+      resultOutput = (total * currencyCoinExchange!.rate).toStringAsFixed(2);
+      resultController.text = "\$ $resultOutput";
       return resultOutput;
     } catch (e) {
       return 'Error';
@@ -458,11 +579,6 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
   onDismissPayment() {
     if (oldDialogContext != null) {
       Navigator.of(oldDialogContext).pop();
-
-      //Home
-      ref
-          .read(currentIndexProvider.notifier)
-          .updateCurrentMainWidget("SalesInvoice", 10);
     }
     //oldDialogContext = null;
   }
