@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../../constant.dart';
 import '../../../data/models/vendor.dart';
 
 class VendorSenttings extends StatelessWidget {
@@ -15,52 +16,15 @@ class VendorSenttings extends StatelessWidget {
   TextEditingController phoneController = TextEditingController();
   TextEditingController magneticCartController = TextEditingController();
 
-  String VENDOR_NAME = 'Nombre';
-  String UPDATE_IMAGE = "Actualizar imagen:";
-
   int VENDOR_NAME_LENGTH = 70;
-
-  String ADD_VENDOR_NAME = 'Nombre del vendedor';
 
   String FLOAT_REGULAR_EXPRESSION = r'^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$';
   String INTEGER_REGULAR_EXPRESSION = r'^([0-9]+)$';
   String TEXT_ALPHANUMERIC_SPACE = r'^[a-zA-Z0-9 _-]*$';
 
-  String ERROR_VENDOR_NAME_EMPTY = 'El nombre del vendedor es obligatorio';
-
-  String ERROR_VENDOR_NAME_REGULAR_EXPRESSION =
-      "El nombre del vendedor solo puede contener letras y números";
-
-  String ERROR_IDENTIFICATOR_NUMBER_EMPTY =
-      'El carnet de identidad es obligatorio';
-
-  String ERROR_IDENTIFICATOR_NUMBER_REGULAR_EXPRESSION =
-      "El carnet de identidad solo puede contener números";
-
-  String IDENTIFICATION_NUMBER_TITLE = 'Carnet de Identidad';
-
   int IDENTIFICATION_NUMBER_LENGTH = 11;
 
   int PHONE_NUMBER_LENGTH = 8;
-
-  String PHONE_NUMBER_TITLE = 'Teléfono';
-
-  String ERROR_PHONE_NUMBER_EMPTY = 'El número de teléfono es obligatorio';
-
-  String ERROR_MAGNETIC_CART_EMPTY = 'El número de teléfono es obligatorio';
-
-  String ERROR_PHONE_NUMBER_REGULAR_EXPRESSION =
-      'El número de teléfono solo puede contener números';
-
-  int MAGNETIC_CART_NUMBER_LENGTH = 12;
-
-  String MAGNETIC_CART_NUMBER_TITLE = 'Número de tarjeta magnética';
-
-  String ERROR_MAGNETIC_CART_NUMBER_EMPTY =
-      'El número de targeta magnética es obligatorio';
-
-  String ERROR_MAGNETIC_CART_NUMBERR_REGULAR_EXPRESSION =
-      'El número de targeta magnética solo puede contener números';
 
   VendorSenttings({super.key});
 
@@ -172,7 +136,7 @@ class VendorSenttings extends StatelessWidget {
                   decoration: InputDecoration(
                       counterText: "",
                       border: InputBorder.none,
-                      hintText: ADD_VENDOR_NAME,
+                      hintText: ADD_PHONE_NUMBER,
                       hintStyle: const TextStyle(
                           fontSize: 11, fontWeight: FontWeight.w300)),
                   validator: (value) {
@@ -208,7 +172,7 @@ class VendorSenttings extends StatelessWidget {
                   decoration: InputDecoration(
                       counterText: "",
                       border: InputBorder.none,
-                      hintText: ADD_VENDOR_NAME,
+                      hintText: ADD_ACCOUNT_NUMBER,
                       hintStyle: const TextStyle(
                           fontSize: 11, fontWeight: FontWeight.w300)),
                   validator: (value) {

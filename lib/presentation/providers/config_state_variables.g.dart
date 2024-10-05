@@ -83,5 +83,22 @@ final paymentMethodProvider = NotifierProvider<PaymentMethod, String>.internal(
 );
 
 typedef _$PaymentMethod = Notifier<String>;
+String _$currentSelectedImageHash() =>
+    r'6ebb859fb33000d5a74abb4be456b8968433a849';
+
+/// See also [CurrentSelectedImage].
+@ProviderFor(CurrentSelectedImage)
+final currentSelectedImageProvider =
+    NotifierProvider<CurrentSelectedImage, String>.internal(
+  CurrentSelectedImage.new,
+  name: r'currentSelectedImageProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentSelectedImageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentSelectedImage = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

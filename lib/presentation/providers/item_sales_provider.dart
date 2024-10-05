@@ -50,8 +50,8 @@ class SelectedProduct extends _$SelectedProduct {
       colors: [],
       category: '',
       rate: 0);
-
-  void setProduct(Product newProduct) {
+//Check https://stackoverflow.com/questions/75391076/update-state-of-an-object-in-riverpod
+  void set product(Product newProduct) {
     state = newProduct;
   }
 
@@ -63,8 +63,8 @@ class SelectedProduct extends _$SelectedProduct {
     return false;
   }
 
-  bool addColor(Color newColor) {
-    state.colors.add(newColor);
+  bool addColor(List<Color> newListColors) {
+    state = state.copyWith(colors: newListColors);
     return true;
   }
 
@@ -76,7 +76,11 @@ class SelectedProduct extends _$SelectedProduct {
   }
 
   set categories(String newCategory) {
-    state.category = newCategory;
+    state = state.copyWith(category: newCategory);
+  }
+
+  set image(String path) {
+    state = state.copyWith(image: path);
   }
 }
 

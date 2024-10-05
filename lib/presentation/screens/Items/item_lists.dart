@@ -12,7 +12,6 @@ import '../../providers/config_state_variables.dart';
 import '../../widgets/cart_tile_store.dart';
 import '../../widgets/categories.dart';
 import '../../widgets/search_bar.dart';
-import '../../../constant.dart';
 
 class ItemListsScreen extends ConsumerWidget {
   late BuildContext oldDialogContext;
@@ -85,9 +84,8 @@ class ItemListsScreen extends ConsumerWidget {
                   ref.read(itemSalesProvider.notifier).deleteProduct(index);
                 },
                 onEditItem: () {
-                  ref
-                      .read(selectedProductProvider.notifier)
-                      .setProduct(itemProduct);
+                  ref.read(selectedProductProvider.notifier).product =
+                      itemProduct;
                   ref
                       .read(itemSalesCurrentFilterProvider.notifier)
                       .changeCurrentFilter(FilterType.updateItemList);
@@ -129,9 +127,8 @@ class ItemListsScreen extends ConsumerWidget {
         backgroundColor: kprimaryColor,
         tooltip: ADD_PRODUCT,
         onPressed: () {
-          ref
-              .read(selectedProductProvider.notifier)
-              .setProduct(Product(title: '', price: 0.0, rate: 1));
+          ref.read(selectedProductProvider.notifier).product =
+              Product(title: '', price: 0.0, rate: 1);
           ref
               .read(itemSalesCurrentFilterProvider.notifier)
               .changeCurrentFilter(FilterType.updateItemList);

@@ -68,3 +68,93 @@ String BUSSINES_ADDRESS = 'Dirección del negocio';
 String BUSSINES_PHONE_NUMBER = 'Teléfono del negocio';
 
 String BUSSINES_WEBPAGE = "Página web del negocio";
+
+String SELECT_CATEGORY_HINT = "Seleccionar categoría";
+
+Map<String, Color> colorCodesEn = {
+  'Red': Colors.red,
+  'Orange': Colors.orange,
+  'Yellow': Colors.yellow,
+  'green': Colors.green,
+  'Blue': Colors.blue,
+  'Indigo': Colors.indigo,
+  'Purple': Colors.purple,
+  'Pink': Colors.pink,
+  'Black': Colors.black,
+  'White': Colors.white,
+  'Brown': Colors.brown,
+  'Grey': Colors.grey,
+  'Lime': Colors.lime,
+  'Teal': Colors.teal,
+  'Cyan': Colors.cyan,
+};
+
+Map<String, Color> colorCodesEs = {
+  'Rojo': Colors.red,
+  'Naranja': Colors.orange,
+  'Amarillo': Colors.yellow,
+  'Verde': Colors.green,
+  'Azul': Colors.blue,
+  'Indigo': Colors.indigo,
+  'Rosado': Colors.pink,
+  'Negro': Colors.black,
+  'Blanco': Colors.white,
+  'Marron': Colors.brown,
+  'Gris': Colors.grey,
+  'Violeta': Colors.purple,
+  'Limón': Colors.lime,
+  'Verde azulado': Colors.teal,
+  'Cian': Colors.cyan,
+};
+
+String EDIT_ITEM_ERROR_PRICE_MSSG = 'No es un valor correcto, revise por favor';
+
+String EDIT_ITEM_ERROR_PRICE_POSITIVE_MSSG =
+    'El precio debe ser un número positivo';
+
+String PHONE_NUMBER_TITLE = 'Teléfono';
+
+String ERROR_PHONE_NUMBER_EMPTY = 'El número de teléfono es obligatorio';
+
+String ERROR_MAGNETIC_CART_EMPTY = 'El número de teléfono es obligatorio';
+
+String ERROR_PHONE_NUMBER_REGULAR_EXPRESSION =
+    'El número de teléfono solo puede contener números';
+
+int MAGNETIC_CART_NUMBER_LENGTH = 12;
+
+String MAGNETIC_CART_NUMBER_TITLE = 'Número de tarjeta magnética';
+
+String ERROR_MAGNETIC_CART_NUMBER_EMPTY =
+    'El número de targeta magnética es obligatorio';
+
+String ERROR_MAGNETIC_CART_NUMBERR_REGULAR_EXPRESSION =
+    'El número de targeta magnética solo puede contener números';
+
+String ADD_VENDOR_NAME = 'Nombre del vendedor';
+
+String ADD_ACCOUNT_NUMBER = 'Número de tarjeta o cuenta bancaria';
+
+String ADD_PHONE_NUMBER = 'Inserte el numero de teléfono';
+
+String VENDOR_NAME = 'Nombre';
+String UPDATE_IMAGE = "Actualizar imagen:";
+
+String ERROR_VENDOR_NAME_EMPTY = 'El nombre del vendedor es obligatorio';
+
+String ERROR_VENDOR_NAME_REGULAR_EXPRESSION =
+    "El nombre del vendedor solo puede contener letras y números";
+
+String ERROR_IDENTIFICATOR_NUMBER_EMPTY =
+    'El carnet de identidad es obligatorio';
+
+String ERROR_IDENTIFICATOR_NUMBER_REGULAR_EXPRESSION =
+    "El carnet de identidad solo puede contener números";
+
+String IDENTIFICATION_NUMBER_TITLE = 'Carnet de Identidad';
+
+enum ImageSourceType { camera, gallery, video, photo }
+
+String ERROR_SELECT_IMAGE_FROM_GALLERY = 'Debe seleccionar una imagen';
+
+String NOT_FILE_ADDRESS = 'assets/no-image.jpg';

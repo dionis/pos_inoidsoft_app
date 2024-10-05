@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/items_car_sales_provider.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/color_picker.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/take_picture.dart';
 import 'package:random_name_generator/random_name_generator.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:uuid/uuid.dart';
@@ -155,6 +157,8 @@ class CrudItemScreen extends ConsumerWidget {
 
   List<String> _listCategoryName = [];
 
+  int COLORS_LIMIT = 7;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color currentPickerColor = colorCodes['orange'] ?? Colors.pink;
@@ -163,6 +167,14 @@ class CrudItemScreen extends ConsumerWidget {
     indexSelectedItem = ref.watch(selectedProductIndexProvider);
 
     fromEditScreenEvent = ref.watch(itemSalesCurrentFilterProvider);
+
+    _validateFileExists(selectedItem.image).then((path) {
+      ref.read(currentSelectedImageProvider.notifier).updateImage = path;
+    });
+
+    // selectedItem.image!.contains('assets')
+    //     ? _validateFileExists(selectedItem.image)
+    //     : selectedItem.image;
 
     if (selectedItem != null) {
       selectedImage = File(
@@ -244,7 +256,16 @@ class CrudItemScreen extends ConsumerWidget {
               const SizedBox(
                 height: 2.0,
               ),
-              showItemImages(),
+              //showItemImages(ref),
+              // const SizedBox(
+              //   height: 1.0,
+              // ),
+              TakePicture(updateImage: (String path) {
+                if (path.isNotEmpty) {
+                  ref.read(selectedProductProvider.notifier).image = path;
+                }
+              }),
+
               const SizedBox(
                 height: 10.0,
               ),
@@ -343,7 +364,7 @@ class CrudItemScreen extends ConsumerWidget {
 
                   //Regex float number [-+]?[0-9]*\.?[0-9]*
                   RegExp re = RegExp(FLOAT_REGULAR_EXPRESSION);
-                  var resultMessage = BAD_PRICE_NOT_VALID;
+                  var resultMessage;
                   double numberPrice = toDouble(value ?? "0.0");
 
                   if (!re.hasMatch(value ?? "")) {
@@ -385,10 +406,9 @@ class CrudItemScreen extends ConsumerWidget {
                     RegExp re = RegExp(INTEGER_REGULAR_EXPRESSION);
 
                     if (!re.hasMatch(value ?? "")) {
-                      resultMessage =
-                          'No es un valor correcto, revise por favor';
+                      resultMessage = EDIT_ITEM_ERROR_PRICE_MSSG;
                     } else if (value is double && (value as double) < 1) {
-                      resultMessage = 'Precio debe ser un número positivo';
+                      resultMessage = EDIT_ITEM_ERROR_PRICE_POSITIVE_MSSG;
                     }
 
                     return resultMessage;
@@ -429,15 +449,13 @@ class CrudItemScreen extends ConsumerWidget {
                 height: 5.0,
               ),
               CustomDropdown<String>.search(
-                hintText: 'Select cuisines',
+                hintText: SELECT_CATEGORY_HINT,
                 items: _listCategoryName,
                 initialItem: _listCategoryName[0],
                 overlayHeight: 342,
                 onChanged: (value) {
-                  print('SearchDropdown onChanged value: $value');
-                  // setState(() {
-                  //   selectedItem = value;
-                  // });
+                  ref.read(selectedProductProvider.notifier).categories =
+                      value ?? '';
                 },
               ),
               const SizedBox(
@@ -449,6 +467,30 @@ class CrudItemScreen extends ConsumerWidget {
               ),
               const SizedBox(
                 height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(ITEM_SELECT_COLORS, style: semiBoldTextFileStyle()),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0, right: 5),
+                    child: ColorPicker(
+                      action: (Color pikedColor) {
+                        if (!selectedItem.colors
+                                .any((element) => element == pikedColor) &&
+                            selectedItem.colors.length + 1 <= COLORS_LIMIT) {
+                          selectedItem.colors.add(pikedColor);
+                          ref
+                              .read(selectedProductProvider.notifier)
+                              .addColor(selectedItem.colors);
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 5.0,
               ),
               Column(
                 children: [
@@ -467,89 +509,50 @@ class CrudItemScreen extends ConsumerWidget {
                   //
 
                   Row(
-                    children: List.generate(
-                        selectedItem.colors.length,
-                        (index) => GestureDetector(
-                            onTap: () {
-                              // setState(() {
-                              //   currentColor = index;
-                              // });
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: currentColor == index
-                                    ? Colors.white
-                                    : selectedItem.colors[index],
-                                border:
-                                    currentColor == index ? Border.all() : null,
-                              ),
-                              padding: currentColor == index
-                                  ? const EdgeInsets.all(2)
-                                  : null,
-                              margin: const EdgeInsets.only(right: 10),
-                              child: Container(
-                                width: 35,
-                                height: 35,
+                      children: selectedItem.colors
+                          .map((color) => GestureDetector(
+                              onTap: () {
+                                // setState(() {
+                                //   currentColor = index;
+                                // });
+                                selectedItem.colors.remove(color is Color
+                                    ? color
+                                    : Color(color!.value));
+                                ref
+                                    .read(selectedProductProvider.notifier)
+                                    .addColor(selectedItem.colors);
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                width: 40,
+                                height: 40,
                                 decoration: BoxDecoration(
-                                    color: selectedItem.colors[index],
-                                    shape: BoxShape.circle),
-                              ),
-                            ))),
-                  ),
+                                  shape: BoxShape.circle,
+                                  color: color is Color
+                                      ? color
+                                      : Color(color!.value),
+                                  border: Border.all(),
+                                ),
+                                padding: const EdgeInsets.all(2),
+                                margin: const EdgeInsets.only(right: 10),
+                                child: Container(
+                                  width: 35,
+                                  height: 35,
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: color, shape: BoxShape.circle),
+                                ),
+                              )))
+                          .toList()),
                 ],
               ),
               const SizedBox(
                 height: 5.0,
-              ),
-              Text(ITEM_SELECT_COLORS, style: semiBoldTextFileStyle()),
-              const SizedBox(
-                height: 5.0,
-              ),
-              Center(
-                child: DropdownButtonHideUnderline(
-                    child: DropdownButton<Color>(
-                  items: colorCodes
-                      .map((colorName, color) => MapEntry(
-                          colorName,
-                          DropdownMenuItem<Color>(
-                              value: color,
-                              child: Container(
-                                color: color,
-                              ))))
-                      .values
-                      .toList(),
-                  onChanged: (value) {
-                    currentPickerColor = value ?? Colors.black;
-                    Color inList = selectedItem.colors.firstWhere(
-                        (element) => currentPickerColor == element,
-                        orElse: () => Colors.transparent);
-
-                    if (inList == Colors.transparent) {
-                      //add to list because not exits
-                      //selectedItem.colors.add(currentPickerColor);
-
-                      ref
-                          .read(selectedProductProvider.notifier)
-                          .addColor(currentPickerColor);
-                    } else {
-                      //Show warning because color exits
-                      Fluttertoast.showToast(
-                          msg: COLOR_EXISTS, toastLength: Toast.LENGTH_SHORT);
-                    }
-                  },
-                  dropdownColor: Colors.white,
-                  hint: Text(ITEM_SELECT_COLORS),
-                  iconSize: 36,
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                  ),
-                  value: currentPickerColor,
-                )),
               ),
             ],
           ),
@@ -570,58 +573,107 @@ class CrudItemScreen extends ConsumerWidget {
     return const TextStyle(fontWeight: FontWeight.bold, fontSize: 17);
   }
 
-  Future getImage() async {
-    var image = await _imagePicker.pickImage(source: ImageSource.gallery);
+  Future getImageFromSources(WidgetRef ref, ImageSource source) async {
+    var image = await _imagePicker.pickImage(source: source);
 
-    selectedImage = File(image!.path);
+    try {
+      selectedImage = File(image!.path);
+      ref.read(selectedProductProvider.notifier).image = image!.path;
+    } catch (e) {
+      if (image is Null || image!.path is Null) {
+        Fluttertoast.showToast(
+            msg: ERROR_SELECT_IMAGE_FROM_GALLERY,
+            toastLength: Toast.LENGTH_SHORT);
+      }
+    }
   }
 
-  Widget showItemImages() {
-    return selectedImage == null
-        ? Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.black)),
-            ),
-          )
-        : Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: selectedItem.image.contains('asset')
-                        ? Image.asset(selectedItem.image)
-                        : Image.file(
-                            selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
-                  )),
-            ),
-          );
-  }
+  // /**
+  //  *   Take Image Bibliografy
+  //  *   Streamlining Image Selection with Flutter Image Picker Plugin
+  //  *      https://www.dhiwise.com/post/streamlining-image-selection-with-flutter-image-picker-plugin
+  //  *
+  //  *   Building an image picker in Flutter
+  //  *     https://blog.logrocket.com/building-an-image-picker-in-flutter/
+  //  *
+  //  *   Mastering Image Picking in Flutter with ImagePicker Plugin
+  //  *     https://purvikrana.medium.com/mastering-image-picking-in-flutter-with-imagepicker-plugin-ee4d2429ad06
+  //  *
+  //  *   image_picker: ^1.1.2
+  //  *      https://pub.dev/packages/image_picker/example
+  //  *
+  //  */
+  // Widget showItemImages(WidgetRef ref) {
+  //   return Column(children: [
+  //     selectedImage == null
+  //         ? Center(
+  //             child: Material(
+  //               elevation: 4.0,
+  //               borderRadius: BorderRadius.circular(20),
+  //               child: Container(
+  //                   width: 150,
+  //                   height: 140,
+  //                   decoration: BoxDecoration(
+  //                       border: Border.all(color: Colors.black, width: 1.5),
+  //                       borderRadius: BorderRadius.circular(20)),
+  //                   child: const Icon(Icons.camera_alt_outlined,
+  //                       color: Colors.black)),
+  //             ),
+  //           )
+  //         : Center(
+  //             child: Material(
+  //               elevation: 4.0,
+  //               borderRadius: BorderRadius.circular(10),
+  //               child: Container(
+  //                   width: 150,
+  //                   height: 150,
+  //                   decoration: BoxDecoration(
+  //                       border: Border.all(color: Colors.black, width: 1.5),
+  //                       borderRadius: BorderRadius.circular(20)),
+  //                   child: Column(children: [
+  //                     ClipRRect(
+  //                       borderRadius: BorderRadius.circular(10),
+  //                       child: selectedItem.image.contains('asset')
+  //                           ? Image.asset(selectedItem.image)
+  //                           : Image.file(
+  //                               selectedImage!,
+  //                             ),
+  //                     ),
+  //                   ])),
+  //             ),
+  //           ),
+  //     const SizedBox(
+  //       height: 2,
+  //     ),
+  //     Center(
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           IconButton(
+  //               color: kprimaryColor,
+  //               onPressed: () => getImageFromSources(ref, ImageSource.gallery),
+  //               icon: const Icon(
+  //                 Icons.photo_album_outlined,
+  //               )),
+  //           IconButton(
+  //               color: kprimaryColor,
+  //               onPressed: () => getImageFromSources(ref, ImageSource.camera),
+  //               icon: const Icon(
+  //                 Icons.camera,
+  //               )),
+  //         ],
+  //       ),
+  //     )
+  //   ]);
+  // }
 
   updateItem(BuildContext context, WidgetRef ref) {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
       // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Processing Data')),
+      // );
 
       if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
         /**
@@ -726,6 +778,22 @@ class CrudItemScreen extends ConsumerWidget {
   void onDismissTile() {
     if (oldDialogContext != null) {
       Navigator.of(oldDialogContext).pop();
+    }
+  }
+
+  Future<String> _validateFileExists(String filePath) async {
+    try {
+      // Si el archivo existe, la carga será exitosa y se cargarán sus datos
+      if (filePath.isEmpty || !filePath.contains('assets')) {
+        throw ErrorDescription(
+            "Error in file read as assets resource: $filePath");
+      } else {
+        AssetImage(filePath);
+      }
+      return filePath;
+    } catch (e) {
+      // Si el archivo no existe, se producirá un error
+      return File(filePath).existsSync() ? filePath : NOT_FILE_ADDRESS;
     }
   }
 }

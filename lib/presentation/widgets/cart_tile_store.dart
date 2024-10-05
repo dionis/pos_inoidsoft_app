@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
@@ -41,6 +43,8 @@ class CarTileStore extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final String imageToShoPath = validateItemImage(item.product);
+
     return Padding(
       padding: const EdgeInsets.only(top: 3, bottom: 3),
       child: Stack(
@@ -57,7 +61,9 @@ class CarTileStore extends ConsumerWidget {
                     decoration: BoxDecoration(
                         color: kcontentColor,
                         borderRadius: BorderRadius.circular(20)),
-                    child: Image.asset(validateItemImage(item.product)),
+                    child: imageToShoPath.contains('assets')
+                        ? Image?.asset(imageToShoPath!, fit: BoxFit.cover)
+                        : Image.file(File(imageToShoPath!), fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -131,7 +137,9 @@ class CarTileStore extends ConsumerWidget {
                                             width: 110,
                                             child: FloatingActionButton(
                                               onPressed: onDismissTile,
-                                              child: Text(CANCEL_BUTTON_LABEL),
+                                              child: Text(CANCEL_BUTTON_LABEL,
+                                                  style:
+                                                      TextStyle(fontSize: 16)),
                                             ),
                                           ),
                                           Container(
@@ -139,7 +147,9 @@ class CarTileStore extends ConsumerWidget {
                                             width: 110,
                                             child: FloatingActionButton(
                                               onPressed: onEditTile,
-                                              child: Text(UPDATE_BUTTON_LABEL),
+                                              child: Text(UPDATE_BUTTON_LABEL,
+                                                  style:
+                                                      TextStyle(fontSize: 16)),
                                             ),
                                           )
                                         ],
@@ -207,9 +217,11 @@ class CarTileStore extends ConsumerWidget {
   }
 
   String validateItemImage(Product? product) {
-    return product == null || product.image == ''
-        ? "assets/no-image.jpg"
-        : product.image;
+    String result = NOT_FILE_ADDRESS;
+
+    result = _validateFileExists(product!.image);
+
+    return (product == null || product.image == '') ? NOT_FILE_ADDRESS : result;
   }
 
   void onDismissTile() {
@@ -235,6 +247,22 @@ class CarTileStore extends ConsumerWidget {
 
     if (oldDialogContextTile != null) {
       Navigator.of(oldDialogContextTile).pop();
+    }
+  }
+
+  String _validateFileExists(String filePath) {
+    try {
+      // Si el archivo existe, la carga será exitosa y se cargarán sus datos
+      if (filePath.isEmpty || !filePath.contains('assets')) {
+        throw ErrorDescription(
+            "Error in file read as assets resource: $filePath");
+      } else {
+        AssetImage(filePath);
+      }
+      return filePath;
+    } catch (e) {
+      // Si el archivo no existe, se producirá un error
+      return File(filePath).existsSync() ? filePath : NOT_FILE_ADDRESS;
     }
   }
 }

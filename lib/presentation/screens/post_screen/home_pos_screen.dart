@@ -144,9 +144,8 @@ class _HomePosScreenState extends ConsumerState<HomePosScreen> {
                         //Update the current quantity in cart
                         item.rate = (foundItems[index]!.quantity ?? 0) * 1.0;
 
-                        ref
-                            .read(selectedProductProvider.notifier)
-                            .setProduct(item);
+                        ref.read(selectedProductProvider.notifier).product =
+                            item;
                         ref
                             .read(itemSalesCurrentFilterProvider.notifier)
                             .changeCurrentFilter(FilterType.updateItemPos);

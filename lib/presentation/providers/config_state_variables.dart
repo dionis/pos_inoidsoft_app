@@ -1,9 +1,9 @@
+import 'dart:io';
+
 import 'package:pos_inoidsoft_app/data/models/category.dart';
-import 'package:pos_inoidsoft_app/presentation/widgets/categories.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../constant.dart';
-import '../../data/models/cart_item.dart';
 part 'config_state_variables.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -94,4 +94,26 @@ class PaymentMethod extends _$PaymentMethod {
   void setPayment(String newPaymentMethod) {
     state = newPaymentMethod;
   }
+}
+
+@Riverpod(keepAlive: true)
+class CurrentSelectedImage extends _$CurrentSelectedImage {
+  String fileImagePath = "";
+
+  @override
+  String build() => fileImagePath;
+  set updateImage(String newFileImagePath) {
+    if (newFileImagePath.isNotEmpty) {
+      File userFile = File(newFileImagePath);
+      if (newFileImagePath.contains('assets') || userFile.existsSync()) {
+        state = newFileImagePath;
+      } else {
+        state = NOT_FILE_ADDRESS;
+      }
+    } else {
+      state = NOT_FILE_ADDRESS;
+    }
+  }
+
+  String getImagePath() => fileImagePath;
 }

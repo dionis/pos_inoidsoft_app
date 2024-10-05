@@ -64,6 +64,26 @@ class Product {
         "price": "${price}",
         "rate": "${rate}"
       };
+
+  Product copyWith(
+          {String? id,
+          String? title,
+          String? description,
+          String? image,
+          double? price,
+          List<Color>? colors,
+          String? category,
+          double? rate,
+          String? barcode}) =>
+      Product(
+          title: title ?? this.title,
+          description: description ?? this.description,
+          image: image ?? this.image,
+          price: price ?? this.price,
+          colors: colors ?? this.colors,
+          category: category ?? this.category,
+          rate: rate ?? this.rate,
+          barcode: barcode ?? this.barcode);
 }
 
 /**

@@ -21,7 +21,7 @@ class ChangeCurremcyDialog extends StatelessWidget {
         actions: this.actions,
         content: Text(
           this.content,
-          style: Theme.of(context).textTheme.bodySmall,
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         ));
   }
 }

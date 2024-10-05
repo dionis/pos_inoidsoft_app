@@ -482,7 +482,7 @@ final itemSalesCurrentFilterProvider =
 );
 
 typedef _$ItemSalesCurrentFilter = Notifier<FilterType>;
-String _$selectedProductHash() => r'0914ed829bc8a9ca57c806e6d00063253ccd1cd3';
+String _$selectedProductHash() => r'92714e3e0715d3e814698b75a1ee00a7f9512652';
 
 /// See also [SelectedProduct].
 @ProviderFor(SelectedProduct)
