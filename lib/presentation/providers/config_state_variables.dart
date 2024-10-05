@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:pos_inoidsoft_app/data/models/bussines.dart';
 import 'package:pos_inoidsoft_app/data/models/category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../constant.dart';
+import '../../data/models/vendor.dart';
 part 'config_state_variables.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -116,4 +118,38 @@ class CurrentSelectedImage extends _$CurrentSelectedImage {
   }
 
   String getImagePath() => fileImagePath;
+}
+
+@Riverpod(keepAlive: true)
+class CurrentSelectedVendorSettings extends _$CurrentSelectedVendorSettings {
+  String fileImagePath = "";
+
+  @override
+  Vendor build() => Vendor(
+      name: 'Prueba',
+      idSerialNumber: 'd34532H8332',
+      phoneNumber: '53543234',
+      email: 'prueba@gmail.com',
+      avatarImage: NOT_FILE_ADDRESS,
+      magneticCart: '53554324333222');
+
+  set updateSettings(Vendor newVendor) {
+    state = newVendor;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class CurrentBussinesrSettings extends _$CurrentBussinesrSettings {
+  String fileImagePath = "";
+
+  @override
+  Bussines build() => Bussines(
+      name: 'Prueba Negocio',
+      address: 'Venidad Las Americas s/n',
+      image: NOT_FILE_ADDRESS,
+      phoneNumbers: ['53554324333222', '5858456733']);
+
+  set updateSettings(Bussines newBussines) {
+    state = newBussines;
+  }
 }

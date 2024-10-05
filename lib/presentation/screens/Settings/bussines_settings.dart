@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 
 import '../../../data/models/bussines.dart';
+import '../../widgets/take_picture.dart';
 
-class BussinesSettings extends StatelessWidget {
+class BussinesSettings extends ConsumerWidget {
   final _formSettingsKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
@@ -47,7 +50,9 @@ class BussinesSettings extends StatelessWidget {
   BussinesSettings({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    bussinesData = ref.watch(currentBussinesrSettingsProvider);
+
     return Scaffold(
       body: Form(
         key: _formSettingsKey,
@@ -63,7 +68,15 @@ class BussinesSettings extends StatelessWidget {
               const SizedBox(
                 height: 2.0,
               ),
-              showItemImages(),
+              TakePicture(updateImage: (String path) {
+                if (path.isNotEmpty) {
+                  bussinesData.image = path;
+
+                  ref
+                      .read(currentBussinesrSettingsProvider.notifier)
+                      .updateSettings = bussinesData;
+                }
+              }),
               const SizedBox(
                 height: 10.0,
               ),
@@ -174,44 +187,5 @@ class BussinesSettings extends StatelessWidget {
 
   TextStyle semiBoldTextFileStyle() {
     return const TextStyle(fontWeight: FontWeight.bold, fontSize: 17);
-  }
-
-  Widget showItemImages() {
-    return selectedImage == null
-        ? Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.black)),
-            ),
-          )
-        : Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: bussinesData.image.contains('asset')
-                        ? Image.asset(bussinesData.image)
-                        : Image.file(
-                            selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
-                  )),
-            ),
-          );
   }
 }

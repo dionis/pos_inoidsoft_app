@@ -84,7 +84,7 @@ final paymentMethodProvider = NotifierProvider<PaymentMethod, String>.internal(
 
 typedef _$PaymentMethod = Notifier<String>;
 String _$currentSelectedImageHash() =>
-    r'6ebb859fb33000d5a74abb4be456b8968433a849';
+    r'3712e1abaf0a8251523613971e8930e3027264c3';
 
 /// See also [CurrentSelectedImage].
 @ProviderFor(CurrentSelectedImage)
@@ -100,5 +100,39 @@ final currentSelectedImageProvider =
 );
 
 typedef _$CurrentSelectedImage = Notifier<String>;
+String _$currentSelectedVendorSettingsHash() =>
+    r'655207116c02643cfebb208bca9e9047ed16d81e';
+
+/// See also [CurrentSelectedVendorSettings].
+@ProviderFor(CurrentSelectedVendorSettings)
+final currentSelectedVendorSettingsProvider =
+    NotifierProvider<CurrentSelectedVendorSettings, Vendor>.internal(
+  CurrentSelectedVendorSettings.new,
+  name: r'currentSelectedVendorSettingsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentSelectedVendorSettingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentSelectedVendorSettings = Notifier<Vendor>;
+String _$currentBussinesrSettingsHash() =>
+    r'c680a99156e9b873c15b8078dc6f492a4cc85e22';
+
+/// See also [CurrentBussinesrSettings].
+@ProviderFor(CurrentBussinesrSettings)
+final currentBussinesrSettingsProvider =
+    NotifierProvider<CurrentBussinesrSettings, Bussines>.internal(
+  CurrentBussinesrSettings.new,
+  name: r'currentBussinesrSettingsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentBussinesrSettingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentBussinesrSettings = Notifier<Bussines>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

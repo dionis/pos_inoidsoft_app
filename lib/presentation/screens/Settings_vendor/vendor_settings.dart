@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 
 import '../../../constant.dart';
 import '../../../data/models/vendor.dart';
+import '../../widgets/take_picture.dart';
 
-class VendorSenttings extends StatelessWidget {
+class VendorSenttings extends ConsumerWidget {
   final _formVendorSettingsKey = GlobalKey<FormState>();
   late Vendor vendorData;
   File? selectedImage;
@@ -26,10 +29,14 @@ class VendorSenttings extends StatelessWidget {
 
   int PHONE_NUMBER_LENGTH = 8;
 
+  late Vendor vendorSettings;
+
   VendorSenttings({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    vendorSettings = ref.watch(currentSelectedVendorSettingsProvider);
+
     return Scaffold(
       body: Form(
         key: _formVendorSettingsKey,
@@ -45,7 +52,15 @@ class VendorSenttings extends StatelessWidget {
               const SizedBox(
                 height: 2.0,
               ),
-              showItemImages(),
+              TakePicture(updateImage: (String path) {
+                if (path.isNotEmpty) {
+                  vendorSettings.avatarImage = path;
+
+                  ref
+                      .read(currentSelectedVendorSettingsProvider.notifier)
+                      .updateSettings = vendorSettings;
+                }
+              }),
               //Add or update Name
               const SizedBox(
                 height: 10.0,
@@ -198,44 +213,5 @@ class VendorSenttings extends StatelessWidget {
 
   TextStyle semiBoldTextFileStyle() {
     return const TextStyle(fontWeight: FontWeight.bold, fontSize: 17);
-  }
-
-  Widget showItemImages() {
-    return selectedImage == null
-        ? Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.black)),
-            ),
-          )
-        : Center(
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: vendorData.avatarImage.contains('asset')
-                        ? Image.asset(vendorData.avatarImage)
-                        : Image.file(
-                            selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
-                  )),
-            ),
-          );
   }
 }
