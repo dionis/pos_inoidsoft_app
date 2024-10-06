@@ -28,11 +28,12 @@ class CustomDrawer extends ConsumerWidget {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
                 color: Colors.blue,
-                image: DecorationImage(image: AssetImage("images/slider.jpg"))),
-            child: Text('Drawer Header'),
+                image: DecorationImage(
+                    image: AssetImage("assets/Logo.png"), fit: BoxFit.cover)),
+            child: Container(),
           ),
           ListTile(
             title: Text(

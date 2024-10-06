@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../constant.dart';
 import '../../../data/models/vendor.dart';
@@ -29,13 +30,21 @@ class VendorSenttings extends ConsumerWidget {
 
   int PHONE_NUMBER_LENGTH = 8;
 
-  late Vendor vendorSettings;
-
   VendorSenttings({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    vendorSettings = ref.watch(currentSelectedVendorSettingsProvider);
+    vendorData = ref.watch(currentSelectedVendorSettingsProvider);
+
+    Future(() {
+      ref.read(currentSelectedImageProvider.notifier).updateImage =
+          vendorData.avatarImage;
+    });
+
+    nameController.text = vendorData.name;
+    identificationNumberController.text = vendorData.idSerialNumber;
+    phoneController.text = vendorData.phoneNumber;
+    magneticCartController.text = vendorData.magneticCart;
 
     return Scaffold(
       body: Form(
@@ -54,11 +63,11 @@ class VendorSenttings extends ConsumerWidget {
               ),
               TakePicture(updateImage: (String path) {
                 if (path.isNotEmpty) {
-                  vendorSettings.avatarImage = path;
+                  vendorData.avatarImage = path;
 
                   ref
                       .read(currentSelectedVendorSettingsProvider.notifier)
-                      .updateSettings = vendorSettings;
+                      .updateSettings = vendorData;
                 }
               }),
               //Add or update Name
@@ -147,7 +156,7 @@ class VendorSenttings extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: TextFormField(
                   maxLength: PHONE_NUMBER_LENGTH,
-                  controller: identificationNumberController,
+                  controller: phoneController,
                   decoration: InputDecoration(
                       counterText: "",
                       border: InputBorder.none,
@@ -208,10 +217,65 @@ class VendorSenttings extends ConsumerWidget {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kprimaryColor,
+        tooltip: ACTION_BUTTON,
+        onPressed: () {
+          updateItem(context, ref);
+        },
+        child: const Icon(Icons.save_as, color: Colors.white, size: 28),
+      ),
     );
   }
 
   TextStyle semiBoldTextFileStyle() {
     return const TextStyle(fontWeight: FontWeight.bold, fontSize: 17);
+  }
+
+  updateItem(BuildContext context, WidgetRef ref) {
+    if (_formVendorSettingsKey.currentState!.validate()) {
+      // If the form is valid, display a snackbar. In the real world,
+      // you'd often call a server or save the information in a database.
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Processing Data')),
+      // );
+
+      if (nameController.text.isNotEmpty) {
+        /**
+           * Bibliografy
+           *   var uuid = Uuid();
+              // Generate a v1 (time-based) id
+              uuid.v1();   // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
+              // Generate a v4 (random) id
+              uuid.v4(); // -> '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+
+              Uiid Package information
+                https://pub.dev/packages/uuid
+
+      */
+        String addId = Uuid().v1();
+
+        ///Save or Update in Database or list
+        ///
+        ///
+        vendorData.name = nameController.text;
+        vendorData.phoneNumber = phoneController.text;
+        vendorData.idSerialNumber = identificationNumberController.text;
+        vendorData.magneticCart = magneticCartController.text;
+
+        //Go to PostSreen or Item List
+        ref
+            .read(currentSelectedVendorSettingsProvider.notifier)
+            .updateSettings = vendorData;
+        ref
+            .read(currentIndexProvider.notifier)
+            .updateCurrentMainWidget("Homeboard", 0);
+      }
+    } else {
+      // Display an error message if the form is not valid.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(ERROR_IN_DATA)),
+      );
+    }
   }
 }

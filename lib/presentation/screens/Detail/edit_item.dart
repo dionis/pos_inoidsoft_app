@@ -48,8 +48,6 @@ class CrudItemScreen extends ConsumerWidget {
 
   String ADD_DESCRIPTION = 'Añadir detalles';
 
-  String ACTION_BUTTON = 'Add';
-
   String? itemCategory = '';
 
   List<String> categoryList =
@@ -127,7 +125,6 @@ class CrudItemScreen extends ConsumerWidget {
 
   String BAD_PRICE_ZERO_OR_NEGATIVE = 'El precio debe ser mayor que 0';
   String BAD_PRICE_NOT_VALID = 'No es un valor correcto, revise por favor';
-  String ERROR_IN_DATA = 'Los datos tienen errores, revise por favor';
 
   int DESCRIPTION_LIMIT = 500;
 
@@ -256,10 +253,6 @@ class CrudItemScreen extends ConsumerWidget {
               const SizedBox(
                 height: 2.0,
               ),
-              //showItemImages(ref),
-              // const SizedBox(
-              //   height: 1.0,
-              // ),
               TakePicture(updateImage: (String path) {
                 if (path.isNotEmpty) {
                   ref.read(selectedProductProvider.notifier).image = path;

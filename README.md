@@ -164,3 +164,18 @@ Aryan Bisht](https://medium.com/@AryanBeast/format-date-and-time-in-flutter-1a8e
 - [TabBar class ](https://api.flutter.dev/flutter/material/TabBar-class.html)
 
 - [TabBar and TabView in Flutter](https://medium.com/@MarvelApps_/tabbar-and-tabview-in-flutter-1d93008663aa)
+
+
+## Chart and how to show stadistics
+
+- [Chart class ](https://pub.dev/packages/fl_chart)
+
+- [FL Chart Documentation](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/index.md)
+
+- [LineChart How to Use](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/line_chart.md)
+    
+    **Check examples**
+
+- [FL Chart Explained: A Quick Guide to Flutter's Chart Library](https://www.youtube.com/watch?v=hVRU-kpKNjQ&list=PL1-_rCwRcnbNpvodmbt43O81wMUdBv8-a&index=2)
+
+- [How Line Chart works in FL Chart](https://www.youtube.com/watch?v=F3wTxTdAFaU&list=PL1-_rCwRcnbNpvodmbt43O81wMUdBv8-a)

@@ -2,16 +2,25 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ShowLineChart extends StatelessWidget {
-  const ShowLineChart({
-    super.key,
-  });
+  List<FlSpot> spotsToShow;
+  double maxX;
+  double maxY;
+
+  ShowLineChart(
+      {super.key, required this.spotsToShow, this.maxX = 12, this.maxY = 4}) {
+    if (spotsToShow.isNotEmpty) {
+      final FlSpot finalValue = spotsToShow.last;
+      maxX = finalValue.x;
+      maxY = finalValue.y;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
         lineTouchData: const LineTouchData(
-          enabled: false,
+          enabled: true,
         ),
         gridData: const FlGridData(
           show: false,
@@ -19,7 +28,7 @@ class ShowLineChart extends StatelessWidget {
         titlesData: const FlTitlesData(
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
-              showTitles: false,
+              showTitles: true,
             ),
           ),
           leftTitles: AxisTitles(
@@ -42,19 +51,21 @@ class ShowLineChart extends StatelessWidget {
           show: false,
         ),
         // minX: 0,
-        maxX: 12,
-        maxY: 4,
+        maxX: maxX,
+        maxY: maxY,
         minY: 0,
         lineBarsData: [
           LineChartBarData(
-            spots: [
-              const FlSpot(1, 1.7),
-              const FlSpot(3, 2.5),
-              const FlSpot(6, 2.4),
-              const FlSpot(8, 2.8),
-              const FlSpot(10, 2.5),
-              const FlSpot(11, 2.6),
-            ],
+            spots: spotsToShow.length > 1
+                ? spotsToShow
+                : [
+                    const FlSpot(1, 1.7),
+                    const FlSpot(3, 2.5),
+                    const FlSpot(6, 2.4),
+                    const FlSpot(8, 2.8),
+                    const FlSpot(10, 2.5),
+                    const FlSpot(11, 5.6),
+                  ],
             isCurved: true,
             color: Colors.orangeAccent,
             barWidth: 4,

@@ -101,7 +101,7 @@ final currentSelectedImageProvider =
 
 typedef _$CurrentSelectedImage = Notifier<String>;
 String _$currentSelectedVendorSettingsHash() =>
-    r'655207116c02643cfebb208bca9e9047ed16d81e';
+    r'7928d6c2be3b93e663a3869b50210dcb181c805d';
 
 /// See also [CurrentSelectedVendorSettings].
 @ProviderFor(CurrentSelectedVendorSettings)
@@ -117,22 +117,22 @@ final currentSelectedVendorSettingsProvider =
 );
 
 typedef _$CurrentSelectedVendorSettings = Notifier<Vendor>;
-String _$currentBussinesrSettingsHash() =>
-    r'c680a99156e9b873c15b8078dc6f492a4cc85e22';
+String _$currentBussinesSettingsHash() =>
+    r'ee9295dd4e244cc7fcf06531937bfe749505af12';
 
-/// See also [CurrentBussinesrSettings].
-@ProviderFor(CurrentBussinesrSettings)
-final currentBussinesrSettingsProvider =
-    NotifierProvider<CurrentBussinesrSettings, Bussines>.internal(
-  CurrentBussinesrSettings.new,
-  name: r'currentBussinesrSettingsProvider',
+/// See also [CurrentBussinesSettings].
+@ProviderFor(CurrentBussinesSettings)
+final currentBussinesSettingsProvider =
+    NotifierProvider<CurrentBussinesSettings, Bussines>.internal(
+  CurrentBussinesSettings.new,
+  name: r'currentBussinesSettingsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$currentBussinesrSettingsHash,
+      : _$currentBussinesSettingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CurrentBussinesrSettings = Notifier<Bussines>;
+typedef _$CurrentBussinesSettings = Notifier<Bussines>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

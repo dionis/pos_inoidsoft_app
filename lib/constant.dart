@@ -158,3 +158,20 @@ enum ImageSourceType { camera, gallery, video, photo }
 String ERROR_SELECT_IMAGE_FROM_GALLERY = 'Debe seleccionar una imagen';
 
 String NOT_FILE_ADDRESS = 'assets/no-image.jpg';
+
+String ACTION_BUTTON = 'Add';
+
+String ERROR_IN_DATA = 'Los datos tienen errores, revise por favor';
+
+String DAILY = 'diarias';
+String DAY = 'Día';
+
+String WEEKLY = 'semanales';
+String WEEK = 'Semana';
+
+String MONTHLY = 'mensuales';
+String MONTH = 'Mes';
+
+String SALES = 'Venta total';
+
+String MAX_DAY = 'Max';

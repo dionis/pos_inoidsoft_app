@@ -111,8 +111,10 @@ class DetailWalletScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 6,
-                        child: const Stack(children: [
-                          ShowLineChart(),
+                        child: Stack(children: [
+                          ShowLineChart(
+                            spotsToShow: [],
+                          ),
                           Positioned(
                             bottom: 92,
                             right: 27,

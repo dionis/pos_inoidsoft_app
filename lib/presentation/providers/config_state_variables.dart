@@ -127,7 +127,7 @@ class CurrentSelectedVendorSettings extends _$CurrentSelectedVendorSettings {
   @override
   Vendor build() => Vendor(
       name: 'Prueba',
-      idSerialNumber: 'd34532H8332',
+      idSerialNumber: '84010526985',
       phoneNumber: '53543234',
       email: 'prueba@gmail.com',
       avatarImage: NOT_FILE_ADDRESS,
@@ -139,15 +139,15 @@ class CurrentSelectedVendorSettings extends _$CurrentSelectedVendorSettings {
 }
 
 @Riverpod(keepAlive: true)
-class CurrentBussinesrSettings extends _$CurrentBussinesrSettings {
+class CurrentBussinesSettings extends _$CurrentBussinesSettings {
   String fileImagePath = "";
 
   @override
   Bussines build() => Bussines(
       name: 'Prueba Negocio',
       address: 'Venidad Las Americas s/n',
-      image: NOT_FILE_ADDRESS,
-      phoneNumbers: ['53554324333222', '5858456733']);
+      image: 'assets/Logo.png',
+      phoneNumbers: ['53554324333222']);
 
   set updateSettings(Bussines newBussines) {
     state = newBussines;
