@@ -7,6 +7,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
 
 import '../../../constant.dart';
+import '../../../data/models/sales_order.dart';
 import '../Currency_exchange/chart.dart';
 
 enum MomentTypes { daily, weekly, monthly }
@@ -121,10 +122,10 @@ class ByMomentStadistic extends ConsumerWidget {
           "$MY_SALES ${validatePeriod(moment)}",
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 15),
         getSaleStadisticsByMomenDrawChart(moment),
         const SizedBox(
-          height: 25,
+          height: 45,
         ),
         const Text(
           BY_PRODUCT_SALES,
@@ -195,15 +196,31 @@ class ByMomentStadistic extends ConsumerWidget {
   }
 
   DrawLineChartWidget getSaleStadisticsByMomenDrawChart(MomentTypes moment) {
+    stadisticOrders.length;
     List<FlSpot> result = [];
-    double step =
-        double.parse((Random().nextDouble() * 1.7).toStringAsFixed(2)) %
-            MAX_LENGTH;
 
-    for (int i = 1; i < MAX_LENGTH; i++) {
-      result.add(FlSpot(i.toDouble(), double.parse(step.toStringAsFixed(2))));
-      step += step + MAX_LENGTH;
+    switch (moment) {
+      case MomentTypes.daily:
+        result = computeBy7LasDay(stadisticOrders);
+        break;
+      case MomentTypes.weekly:
+        result = computeByWeek(stadisticOrders);
+        break;
+      case MomentTypes.monthly:
+        result = computeByMonth(stadisticOrders);
+        break;
+      default:
+        break;
     }
+
+    // double step =
+    //     double.parse((Random().nextDouble() * 1.7).toStringAsFixed(2)) %
+    //         MAX_LENGTH;
+
+    // for (int i = 1; i < MAX_LENGTH; i++) {
+    //   result.add(FlSpot(i.toDouble(), double.parse(step.toStringAsFixed(2))));
+    //   step += step + MAX_LENGTH;
+    // }
 
     //Sum all values in sales by moment
     totalSales = result.fold(0, (tot, item) => tot.toDouble() + item.y);
@@ -223,6 +240,141 @@ class ByMomentStadistic extends ConsumerWidget {
   DrawLineChartWidget getSaleStadisticsByProductDrawChart(
       MomentTypes moment, String selectedProduct) {
     return getSaleStadisticsByMomenDrawChart(moment);
+  }
+
+  List<FlSpot> computeByMonth(List<SalesOrder> stadisticOrders) {
+    List<FlSpot> result = [];
+    Map<int, FlSpot> mapSalesByMonth = {};
+    DateTime currentDay = DateTime.now();
+    int month;
+    double sumAllPrice = 0.0;
+
+    for (SalesOrder iSalesOrder in stadisticOrders) {
+      //If not current year not compute
+      if (iSalesOrder.date.year != currentDay.year) {
+        continue;
+      }
+
+      month = iSalesOrder.date.month;
+
+      //Sum all prices of products in current product order
+      sumAllPrice = iSalesOrder.items
+          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
+
+      if (!mapSalesByMonth.containsKey(month)) {
+        mapSalesByMonth.putIfAbsent(
+            month, () => FlSpot(month.toDouble(), sumAllPrice));
+      } else {
+        FlSpot current = mapSalesByMonth.entries
+            .firstWhere((element) => element.key == month)
+            .value;
+        double y = current.y + sumAllPrice;
+        FlSpot newCurrent = FlSpot(month.toDouble(), y);
+        mapSalesByMonth.update(month, (value) => newCurrent,
+            ifAbsent: () => const FlSpot(0, 0));
+      }
+    }
+
+    return mapSalesByMonth.values.toList();
+  }
+
+  List<FlSpot> computeByWeek(List<SalesOrder> stadisticOrders) {
+    List<FlSpot> result = [];
+    Map<int, FlSpot> mapSalesByMonth = {};
+    DateTime currentDay = DateTime.now();
+    double sumAllPrice = 0.0;
+
+    for (SalesOrder iSalesOrder in stadisticOrders) {
+      //If not current year not compute
+      if (iSalesOrder.date.year != currentDay.year &&
+          iSalesOrder.date.month != currentDay.month) {
+        continue;
+      }
+
+      int valueWeekOfMonth = iSalesOrder.date.weekOfMonth;
+
+      //Sum all prices of products in current product order
+      sumAllPrice = iSalesOrder.items
+          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
+
+      if (!mapSalesByMonth.containsKey(valueWeekOfMonth)) {
+        mapSalesByMonth.putIfAbsent(valueWeekOfMonth,
+            () => FlSpot(valueWeekOfMonth.toDouble(), sumAllPrice));
+      } else {
+        FlSpot current = mapSalesByMonth.entries
+            .firstWhere((element) => element.key == valueWeekOfMonth)
+            .value;
+        double y = current.y + sumAllPrice;
+        FlSpot newCurrent = FlSpot(valueWeekOfMonth.toDouble(), y);
+        mapSalesByMonth.update(valueWeekOfMonth, (value) => newCurrent,
+            ifAbsent: () => const FlSpot(0, 0));
+      }
+    }
+
+    return mapSalesByMonth.values.toList();
+  }
+
+  List<FlSpot> computeBy7LasDay(List<SalesOrder> stadisticOrders) {
+    List<FlSpot> result = [];
+    Map<int, FlSpot> mapSalesByMonth = {};
+    DateTime currentDay = DateTime.now();
+    double sumAllPrice = 0.0;
+    int dayOfDifference = 7;
+
+    for (int iDay = 0; iDay <= dayOfDifference; iDay++) {
+      int dayInInterval = currentDay.subtract(Duration(days: iDay)).day;
+
+      mapSalesByMonth.putIfAbsent(
+          dayInInterval, () => FlSpot(dayInInterval.toDouble(), 0.0));
+    }
+
+    for (SalesOrder iSalesOrder in stadisticOrders) {
+      //If not current year not compute
+      //and validate a day in the last 7 days
+      if (iSalesOrder.date.year != currentDay.year &&
+          iSalesOrder.date.month != currentDay.month &&
+          currentDay.subtract(Duration(days: dayOfDifference)).day <=
+              iSalesOrder.date.day &&
+          iSalesOrder.date.day <= currentDay.day) {
+        continue;
+      }
+
+      int dayOfMonth = iSalesOrder.date.day;
+
+      //Sum all prices of products in current product order
+      sumAllPrice = iSalesOrder.items
+          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
+
+      if (!mapSalesByMonth.containsKey(dayOfMonth)) {
+        mapSalesByMonth.putIfAbsent(
+            dayOfMonth, () => FlSpot(dayOfMonth.toDouble(), sumAllPrice));
+      } else {
+        FlSpot current = mapSalesByMonth.entries
+            .firstWhere((element) => element.key == dayOfMonth)
+            .value;
+        double y = current.y + sumAllPrice;
+        FlSpot newCurrent = FlSpot(dayOfMonth.toDouble(), y);
+        mapSalesByMonth.update(dayOfMonth, (value) => newCurrent,
+            ifAbsent: () => const FlSpot(0, 0));
+      }
+    }
+
+    return mapSalesByMonth.values.toList();
+  }
+
+  // Define an extension method to get the week of the year
+}
+
+extension DateTimeExtension on DateTime {
+  int get weekOfMonth {
+    var date = this;
+    final firstDayOfTheMonth = DateTime(date.year, date.month, 1);
+    int sum = firstDayOfTheMonth.weekday - 1 + date.day;
+    if (sum % 7 == 0) {
+      return sum ~/ 7;
+    } else {
+      return sum ~/ 7 + 1;
+    }
   }
 }
 
