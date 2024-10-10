@@ -172,6 +172,8 @@ String WEEK = 'Semana';
 String MONTHLY = 'mensuales';
 String MONTH = 'Mes';
 
-String SALES = 'Venta total';
+String SALES = 'Total';
 
 String MAX_DAY = 'Max';
+
+String SELECT_PRODUCT_NAME = 'Seleccionar nombre del producto';

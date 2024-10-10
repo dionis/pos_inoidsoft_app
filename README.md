@@ -179,3 +179,11 @@ Aryan Bisht](https://medium.com/@AryanBeast/format-date-and-time-in-flutter-1a8e
 - [FL Chart Explained: A Quick Guide to Flutter's Chart Library](https://www.youtube.com/watch?v=hVRU-kpKNjQ&list=PL1-_rCwRcnbNpvodmbt43O81wMUdBv8-a&index=2)
 
 - [How Line Chart works in FL Chart](https://www.youtube.com/watch?v=F3wTxTdAFaU&list=PL1-_rCwRcnbNpvodmbt43O81wMUdBv8-a)
+
+## Data Base and SQLite
+
+- [Flutter SQFLITE CRUD Operations](https://www.youtube.com/watch?v=MQhjx1HS_pI&t=6s)
+   
+- [Flutter CRUD Application - CRUD Operations in Flutter + SQLITE Tutorial](https://www.youtube.com/watch?v=jnkItI-0Fn0&list=LL&index=3&t=13s)
+
+- [Complete Diary App with Flutter and SQLite | Flutter Sqflite | Flutter Tutorials | Flutter SQLite](https://www.youtube.com/watch?v=PLzX8lu4PRY)

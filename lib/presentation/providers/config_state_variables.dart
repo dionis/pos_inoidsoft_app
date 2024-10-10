@@ -153,3 +153,13 @@ class CurrentBussinesSettings extends _$CurrentBussinesSettings {
     state = newBussines;
   }
 }
+
+@Riverpod(keepAlive: true)
+class SelectedItem extends _$SelectedItem {
+  @override
+  String build() => "";
+
+  set selected(String newSelectedItem) {
+    state = newSelectedItem;
+  }
+}

@@ -134,5 +134,19 @@ final currentBussinesSettingsProvider =
 );
 
 typedef _$CurrentBussinesSettings = Notifier<Bussines>;
+String _$selectedItemHash() => r'4b0f0f634442743f4d573547348d5d739542e1f8';
+
+/// See also [SelectedItem].
+@ProviderFor(SelectedItem)
+final selectedItemProvider = NotifierProvider<SelectedItem, String>.internal(
+  SelectedItem.new,
+  name: r'selectedItemProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$selectedItemHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SelectedItem = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

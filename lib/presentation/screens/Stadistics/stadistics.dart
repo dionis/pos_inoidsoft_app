@@ -4,11 +4,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:pos_inoidsoft_app/presentation/providers/config_state_variables.dart';
 import 'package:pos_inoidsoft_app/presentation/providers/item_sales_provider.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/compute_by_month.dart';
+import 'package:pos_inoidsoft_app/presentation/screens/Stadistics/compute_result.dart';
+import 'package:pos_inoidsoft_app/presentation/widgets/draw_line_chart_widget.dart';
 
 import '../../../constant.dart';
 import '../../../data/models/sales_order.dart';
 import '../Currency_exchange/chart.dart';
+import 'compute_by_7days.dart';
+import 'compute_by_week.dart';
 
 enum MomentTypes { daily, weekly, monthly }
 
@@ -118,36 +124,24 @@ class ByMomentStadistic extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "$MY_SALES ${validatePeriod(moment)}",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        // Text(
+        //   "$MY_SALES ${validatePeriod(moment)}",
+        //   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        // ),
+        // const SizedBox(height: 15),
+        // getSaleStadisticsByMomentDrawChart(moment),
+
+        SaleStadisticsByMomentDrawChart(
+          label: "$MY_SALES ${validatePeriod(moment)}",
+          moment: moment,
         ),
-        const SizedBox(height: 15),
-        getSaleStadisticsByMomenDrawChart(moment),
         const SizedBox(
           height: 45,
         ),
-        const Text(
-          BY_PRODUCT_SALES,
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        SaleStadisticsByMomentDrawChartConsumer(
+          label: BY_PRODUCT_SALES,
+          moment: moment,
         ),
-
-        /// Select one products from the list and show the chart
-        CustomDropdown<String>.search(
-          hintText: 'Select cuisines',
-          items: _listProductName,
-          initialItem: selectedProduct,
-          overlayHeight: 342,
-          onChanged: (value) {
-            print('SearchDropdown onChanged value: $value');
-            // setState(() {
-            //   selectedItem = value;
-            // });
-
-            selectedProduct = value as String;
-          },
-        ),
-        getSaleStadisticsByProductDrawChart(moment, selectedProduct),
       ],
     );
   }
@@ -195,23 +189,26 @@ class ByMomentStadistic extends ConsumerWidget {
     return result;
   }
 
-  DrawLineChartWidget getSaleStadisticsByMomenDrawChart(MomentTypes moment) {
-    stadisticOrders.length;
+  DrawLineChartWidget getSaleStadisticsByMomentDrawChart(MomentTypes moment) {
     List<FlSpot> result = [];
+
+    late ComputeResult stadisticsCalculator;
 
     switch (moment) {
       case MomentTypes.daily:
-        result = computeBy7LasDay(stadisticOrders);
+        stadisticsCalculator = ComputeBy7Days(stadisticOrders: stadisticOrders);
         break;
       case MomentTypes.weekly:
-        result = computeByWeek(stadisticOrders);
+        stadisticsCalculator = ComputeByWeek(stadisticOrders: stadisticOrders);
         break;
       case MomentTypes.monthly:
-        result = computeByMonth(stadisticOrders);
+        stadisticsCalculator = ComputeByMonth(stadisticOrders: stadisticOrders);
         break;
       default:
         break;
     }
+
+    result = stadisticsCalculator.compute();
 
     // double step =
     //     double.parse((Random().nextDouble() * 1.7).toStringAsFixed(2)) %
@@ -231,7 +228,8 @@ class ByMomentStadistic extends ConsumerWidget {
 
     return DrawLineChartWidget(
       moment: moment,
-      maxDaySales: "${max.y} /${getMoment(moment)} (${max.x.toInt()})",
+      maxDaySales:
+          "${double.parse(max.y.toStringAsFixed(2))} /${getMoment(moment)} (${max.x.toInt()})",
       totalSales: totalSales,
       pointToShow: result,
     );
@@ -239,197 +237,173 @@ class ByMomentStadistic extends ConsumerWidget {
 
   DrawLineChartWidget getSaleStadisticsByProductDrawChart(
       MomentTypes moment, String selectedProduct) {
-    return getSaleStadisticsByMomenDrawChart(moment);
-  }
-
-  List<FlSpot> computeByMonth(List<SalesOrder> stadisticOrders) {
-    List<FlSpot> result = [];
-    Map<int, FlSpot> mapSalesByMonth = {};
-    DateTime currentDay = DateTime.now();
-    int month;
-    double sumAllPrice = 0.0;
-
-    for (SalesOrder iSalesOrder in stadisticOrders) {
-      //If not current year not compute
-      if (iSalesOrder.date.year != currentDay.year) {
-        continue;
-      }
-
-      month = iSalesOrder.date.month;
-
-      //Sum all prices of products in current product order
-      sumAllPrice = iSalesOrder.items
-          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
-
-      if (!mapSalesByMonth.containsKey(month)) {
-        mapSalesByMonth.putIfAbsent(
-            month, () => FlSpot(month.toDouble(), sumAllPrice));
-      } else {
-        FlSpot current = mapSalesByMonth.entries
-            .firstWhere((element) => element.key == month)
-            .value;
-        double y = current.y + sumAllPrice;
-        FlSpot newCurrent = FlSpot(month.toDouble(), y);
-        mapSalesByMonth.update(month, (value) => newCurrent,
-            ifAbsent: () => const FlSpot(0, 0));
-      }
-    }
-
-    return mapSalesByMonth.values.toList();
-  }
-
-  List<FlSpot> computeByWeek(List<SalesOrder> stadisticOrders) {
-    List<FlSpot> result = [];
-    Map<int, FlSpot> mapSalesByMonth = {};
-    DateTime currentDay = DateTime.now();
-    double sumAllPrice = 0.0;
-
-    for (SalesOrder iSalesOrder in stadisticOrders) {
-      //If not current year not compute
-      if (iSalesOrder.date.year != currentDay.year &&
-          iSalesOrder.date.month != currentDay.month) {
-        continue;
-      }
-
-      int valueWeekOfMonth = iSalesOrder.date.weekOfMonth;
-
-      //Sum all prices of products in current product order
-      sumAllPrice = iSalesOrder.items
-          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
-
-      if (!mapSalesByMonth.containsKey(valueWeekOfMonth)) {
-        mapSalesByMonth.putIfAbsent(valueWeekOfMonth,
-            () => FlSpot(valueWeekOfMonth.toDouble(), sumAllPrice));
-      } else {
-        FlSpot current = mapSalesByMonth.entries
-            .firstWhere((element) => element.key == valueWeekOfMonth)
-            .value;
-        double y = current.y + sumAllPrice;
-        FlSpot newCurrent = FlSpot(valueWeekOfMonth.toDouble(), y);
-        mapSalesByMonth.update(valueWeekOfMonth, (value) => newCurrent,
-            ifAbsent: () => const FlSpot(0, 0));
-      }
-    }
-
-    return mapSalesByMonth.values.toList();
-  }
-
-  List<FlSpot> computeBy7LasDay(List<SalesOrder> stadisticOrders) {
-    List<FlSpot> result = [];
-    Map<int, FlSpot> mapSalesByMonth = {};
-    DateTime currentDay = DateTime.now();
-    double sumAllPrice = 0.0;
-    int dayOfDifference = 7;
-
-    for (int iDay = 0; iDay <= dayOfDifference; iDay++) {
-      int dayInInterval = currentDay.subtract(Duration(days: iDay)).day;
-
-      mapSalesByMonth.putIfAbsent(
-          dayInInterval, () => FlSpot(dayInInterval.toDouble(), 0.0));
-    }
-
-    for (SalesOrder iSalesOrder in stadisticOrders) {
-      //If not current year not compute
-      //and validate a day in the last 7 days
-      if (iSalesOrder.date.year != currentDay.year &&
-          iSalesOrder.date.month != currentDay.month &&
-          currentDay.subtract(Duration(days: dayOfDifference)).day <=
-              iSalesOrder.date.day &&
-          iSalesOrder.date.day <= currentDay.day) {
-        continue;
-      }
-
-      int dayOfMonth = iSalesOrder.date.day;
-
-      //Sum all prices of products in current product order
-      sumAllPrice = iSalesOrder.items
-          .fold(0, (tot, item) => tot.toDouble() + item.product!.price);
-
-      if (!mapSalesByMonth.containsKey(dayOfMonth)) {
-        mapSalesByMonth.putIfAbsent(
-            dayOfMonth, () => FlSpot(dayOfMonth.toDouble(), sumAllPrice));
-      } else {
-        FlSpot current = mapSalesByMonth.entries
-            .firstWhere((element) => element.key == dayOfMonth)
-            .value;
-        double y = current.y + sumAllPrice;
-        FlSpot newCurrent = FlSpot(dayOfMonth.toDouble(), y);
-        mapSalesByMonth.update(dayOfMonth, (value) => newCurrent,
-            ifAbsent: () => const FlSpot(0, 0));
-      }
-    }
-
-    return mapSalesByMonth.values.toList();
+    return getSaleStadisticsByMomentDrawChart(moment);
   }
 
   // Define an extension method to get the week of the year
 }
 
-extension DateTimeExtension on DateTime {
-  int get weekOfMonth {
-    var date = this;
-    final firstDayOfTheMonth = DateTime(date.year, date.month, 1);
-    int sum = firstDayOfTheMonth.weekday - 1 + date.day;
-    if (sum % 7 == 0) {
-      return sum ~/ 7;
-    } else {
-      return sum ~/ 7 + 1;
+class SaleStadisticsByMomentDrawChart extends StatelessWidget {
+  MomentTypes moment;
+  String label;
+  double totalSales = 0.0;
+
+  SaleStadisticsByMomentDrawChart(
+      {super.key, required this.moment, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    List<FlSpot> result = [];
+    late ComputeResult stadisticsCalculator;
+
+    switch (moment) {
+      case MomentTypes.daily:
+        stadisticsCalculator = ComputeBy7Days(stadisticOrders: stadisticOrders);
+        break;
+      case MomentTypes.weekly:
+        stadisticsCalculator = ComputeByWeek(stadisticOrders: stadisticOrders);
+        break;
+      case MomentTypes.monthly:
+        stadisticsCalculator = ComputeByMonth(stadisticOrders: stadisticOrders);
+        break;
+      default:
+        break;
+    }
+
+    result = stadisticsCalculator.compute();
+    //Sum all values in sales by moment
+    totalSales = result.fold(0, (tot, item) => tot.toDouble() + item.y);
+    totalSales = double.parse(totalSales.toStringAsFixed(2));
+
+    //Find out the max value in list
+    FlSpot max = result.reduce((a, b) => (a.y > b.y) ? a : b);
+
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 15),
+        DrawLineChartWidget(
+          moment: moment,
+          maxDaySales:
+              "${double.parse(max.y.toStringAsFixed(2))} /${getMoment(moment)} (${max.x.toInt()})",
+          totalSales: totalSales,
+          pointToShow: result,
+        )
+      ],
+    );
+  }
+
+  getMoment(MomentTypes moment) {
+    switch (moment) {
+      case MomentTypes.daily:
+        return DAY;
+      case MomentTypes.weekly:
+        return WEEK;
+      case MomentTypes.monthly:
+        return MONTH;
+      default:
+        return 'Invalid moment';
     }
   }
 }
 
-class DrawLineChartWidget extends StatelessWidget {
-  List<FlSpot> pointToShow = [];
+class SaleStadisticsByMomentDrawChartConsumer extends ConsumerWidget {
   MomentTypes moment;
-  var maxDaySales;
-  double totalSales;
+  String label;
+  double totalSales = 0.0;
+  List<String> _listProductName = [];
+  String selectedProduct = '';
+  List<SalesOrder> itemsOrder = [];
 
-  DrawLineChartWidget(
-      {super.key,
-      required this.pointToShow,
-      required this.moment,
-      required this.maxDaySales,
-      required this.totalSales});
+  String selectedItem = '';
+
+  SaleStadisticsByMomentDrawChartConsumer(
+      {super.key, required this.moment, required this.label});
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 6,
-      child: Stack(children: [
-        ShowLineChart(
-          spotsToShow: pointToShow,
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<FlSpot> result = [];
+    late ComputeResult stadisticsCalculator;
+
+    itemsOrder = selectedItem.isEmpty ? stadisticOrders : itemsOrder;
+
+    switch (moment) {
+      case MomentTypes.daily:
+        stadisticsCalculator = ComputeBy7Days(stadisticOrders: itemsOrder);
+        break;
+      case MomentTypes.weekly:
+        stadisticsCalculator = ComputeByWeek(stadisticOrders: itemsOrder);
+        break;
+      case MomentTypes.monthly:
+        stadisticsCalculator = ComputeByMonth(stadisticOrders: itemsOrder);
+        break;
+      default:
+        break;
+    }
+
+    result = stadisticsCalculator.compute();
+    //Sum all values in sales by moment
+    totalSales = result.fold(0, (tot, item) => tot.toDouble() + item.y);
+    totalSales = double.parse(totalSales.toStringAsFixed(2));
+
+    //Find out the max value in list
+    FlSpot max = result.reduce((a, b) => (a.y > b.y) ? a : b);
+
+    _listProductName =
+        ref.watch(itemSalesProvider).map((e) => e.title).toList();
+    selectedProduct = _listProductName[0];
+
+    selectedItem = ref.watch(selectedItemProvider);
+
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        Positioned(
-          bottom: 82,
-          right: 120,
-          child: Row(
-            children: [
-              const CircleAvatar(radius: 10, backgroundColor: Colors.green),
-              const SizedBox(width: 5),
-              Text(
-                "$MAX_DAY: \$$maxDaySales",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+        CustomDropdown<String>.search(
+          hintText: SELECT_PRODUCT_NAME,
+          items: _listProductName,
+          initialItem: selectedProduct,
+          overlayHeight: 342,
+          onChanged: (value) {
+            selectedItem = selectedProduct = value as String;
+
+            itemsOrder = stadisticOrders.map((element) {
+              element.items = element.items
+                  .where((item) => item.product!.title == selectedItem)
+                  .toList();
+              return element;
+            }).toList();
+
+            ref.read(selectedItemProvider.notifier).selected = selectedItem;
+          },
         ),
-        Positioned(
-          bottom: 27,
-          left: 20,
-          child: Row(
-            children: [
-              const CircleAvatar(radius: 5, backgroundColor: Colors.red),
-              const SizedBox(width: 5),
-              Text(
-                "$SALES: \$$totalSales",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ]),
+        const SizedBox(height: 15),
+        DrawLineChartWidget(
+          moment: moment,
+          maxDaySales:
+              "${double.parse(max.y.toStringAsFixed(2))} /${getMoment(moment)} (${max.x.toInt()})",
+          totalSales: totalSales,
+          pointToShow: result,
+        )
+      ],
     );
+  }
+
+  getMoment(MomentTypes moment) {
+    switch (moment) {
+      case MomentTypes.daily:
+        return DAY;
+      case MomentTypes.weekly:
+        return WEEK;
+      case MomentTypes.monthly:
+        return MONTH;
+      default:
+        return 'Invalid moment';
+    }
   }
 }

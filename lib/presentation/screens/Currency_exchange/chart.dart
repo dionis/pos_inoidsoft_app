@@ -9,9 +9,13 @@ class ShowLineChart extends StatelessWidget {
   ShowLineChart(
       {super.key, required this.spotsToShow, this.maxX = 12, this.maxY = 4}) {
     if (spotsToShow.isNotEmpty) {
-      final FlSpot finalValue = spotsToShow.last;
-      maxX = finalValue.x;
-      maxY = finalValue.y;
+      //Find maxY in data to Show
+      FlSpot maxPoint = spotsToShow.reduce((a, b) => (a.y > b.y) ? a : b);
+      maxY = maxPoint.y;
+
+      //Fin maxX in data to Show
+      maxPoint = spotsToShow.reduce((a, b) => (a.x > b.x) ? a : b);
+      maxX = maxPoint.x;
     }
   }
 

@@ -24,7 +24,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     "4",
     "5",
     "6",
-    "*",
+    "+",
     "1",
     "2",
     "3",
@@ -35,17 +35,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     "="
   ];
 
+  double HORIZONTAL_SIZE = 2.45;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            body: Column(children: [
+    //return SafeArea(
+    // child:
+    return Scaffold(
+        body: Column(mainAxisSize: MainAxisSize.max, children: [
       Container(
-        height: MediaQuery.of(context).size.height / 2.90,
+        height: MediaQuery.of(context).size.height / HORIZONTAL_SIZE,
         child: resultWidget(),
       ),
-      Expanded(child: buttomWidget())
-    ])));
+      Expanded(
+          // height: (MediaQuery.of(context).size.height -
+          //     (MediaQuery.of(context).size.height / 3.10)),
+          child: buttomWidget()),
+    ]));
+    //);
   }
 
   Widget resultWidget() {
@@ -76,13 +83,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   buttomWidget() {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       color: const Color.fromARGB(66, 233, 232, 232),
       child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+            childAspectRatio: 1.38,
           ),
           itemCount: buttonList.length,
           itemBuilder: (context, index) {
